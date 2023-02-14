@@ -12,6 +12,8 @@ public class ShoppingCartProduct extends AbstractPageComposite {
     private By productNameLocator = By.className("cx-code");
     private By priceLocator = By.cssSelector(".cx-price .cx-value:first-of-type");
     private By quantitySelectLocator = By.className("quantity-select");
+    private By removeFromCartButtonLocator = By.cssSelector("[aria-label='Remove Product from Bag']");
+
     public ShoppingCartProduct(SelenideElement root) {
         this.root = root;
     }
@@ -37,5 +39,9 @@ public class ShoppingCartProduct extends AbstractPageComposite {
                 .max(Integer::compare)
                 .get();
         productQuantitySelect.selectByValue(maxProductCount.toString());
+    }
+
+    public void removeFromCart() {
+        root.find(removeFromCartButtonLocator).click();
     }
 }

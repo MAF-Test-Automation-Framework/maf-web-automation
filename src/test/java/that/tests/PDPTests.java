@@ -115,6 +115,31 @@ public class PDPTests extends AbstractBaseTest {
     }
 
     /**
+     * MAF_29: add any product to Cart, remove it, verify cart is empty
+     */
+    @Test(groups = {"pdpTests"})
+    public void removeProductFromCartTest() {
+        CategoryProduct firstProduct = womenShoesPLPage.getProducts().get(0);
+        firstProduct.scrollToProduct();
+        firstProduct.clickProduct();
+
+        ProductDetailsPage firstProductDetailsPage = page(ProductDetailsPage.class);
+        firstProductDetailsPage.clickAddToCartButton();
+        firstProductDetailsPage.clickGoToBagHeaderCartPopUpButton();
+
+        CartPage cartPage = page(CartPage.class);
+        List<ShoppingCartProduct> cartProducts = cartPage.getProducts();
+        assertThat(cartProducts).hasSize(1);
+
+        ShoppingCartProduct productToDelete = cartProducts.get(0);
+        productToDelete.removeFromCart();
+
+        assertThat(cartPage.isCartEmpty())
+                .as("Cart should be empty")
+                .isTrue();
+    }
+
+    /**
      * MAF_09: Go to PLP as Guest user, add any product to wishlist,
      * verify Product from Wishlist pop up windows is the same as chosen PLP Product
      */
