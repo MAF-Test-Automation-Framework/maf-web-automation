@@ -1,7 +1,7 @@
 package that.pages;
 
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import com.codeborne.selenide.CollectionCondition;
+import com.codeborne.selenide.ElementsCollection;
 import org.openqa.selenium.support.FindBy;
 import that.composites.CategoryProduct;
 
@@ -11,16 +11,13 @@ import java.util.stream.Collectors;
 public class ProductsListPage extends AbstractPage {
 
     @FindBy(tagName = "app-product-list-item")
-    private List<WebElement> productsList;
+    private ElementsCollection productsList;
 
-    public ProductsListPage(WebDriver driver) {
-        super(driver);
-    }
-
-    public List<CategoryProduct> getProducts(){
+    public List<CategoryProduct> getProducts() {
         return productsList
+                .shouldHave(CollectionCondition.sizeGreaterThan(0))
                 .stream()
-                .map(elem -> new CategoryProduct(driver, elem))
+                .map(CategoryProduct::new)
                 .collect(Collectors.toList());
     }
 }

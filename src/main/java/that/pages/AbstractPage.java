@@ -1,66 +1,65 @@
 package that.pages;
 
+import com.codeborne.selenide.CollectionCondition;
+import com.codeborne.selenide.ElementsCollection;
+import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import that.composites.AbstractPageComposite;
 import that.composites.HeaderMenu;
 import that.composites.ShoppingCartProduct;
 import that.composites.WishlistProduct;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.codeborne.selenide.Selenide.page;
+import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
 
 public class AbstractPage extends AbstractPageComposite {
     HeaderMenu headerMenu;
     @FindBy(className = "ab-close-button")
-    private WebElement notificationTestCloseButton;
+    private SelenideElement notificationTestCloseButton;
 
     @FindBy(className = "cookie-warning-forced-close-button")
-    private WebElement cookieNotificationButton;
+    private SelenideElement cookieNotificationButton;
 
     @FindBy(className = "breadcrumb-wrapper")
-    private WebElement breadCrumb;
+    private SelenideElement breadCrumb;
 
     @FindBy(css = ".search-box-wrapper input")
-    private WebElement productSearchInput;
-
-    @FindBy(css = ".my-list .description")
-    private List<WebElement> foundProductsDescList;
+    private SelenideElement productSearchInput;
 
     @FindBy(xpath = "//*[contains(text(), 'Go to bag')]")
-    private WebElement goToBagCartPopUpButton;
+    private SelenideElement goToBagCartPopUpButton;
 
     @FindBy(css = "header cx-cart-item")
-    private List<WebElement> cartProductsList;
+    private ElementsCollection cartProductsList;
 
     @FindBy(css = "header .item")
-    private List<WebElement> wishlistProductList;
+    private List<SelenideElement> wishlistProductList;
 
     @FindBy(className = "go-to-link")
-    private WebElement goToWishlistButton;
+    private SelenideElement goToWishlistButton;
 
-    public AbstractPage(WebDriver driver) {
-        super(driver);
-        headerMenu = new HeaderMenu(driver);
+    public AbstractPage() {
+        headerMenu = page(HeaderMenu.class);
     }
 
     public void clickNotificationTestCloseButton() {
-        clickItem(notificationTestCloseButton);
+        notificationTestCloseButton.click();
     }
 
     public void clickCookieNotificationCloseButton() {
-        clickItem(cookieNotificationButton);
+        cookieNotificationButton.click();
     }
 
-    public Boolean hasTitleCorrectName(String titleName) {
-        return waitForTitle(titleName);
-    }
-
-    public Boolean doesTitleContainPart(String titlePart) {
-        return waitForTitleContains(titlePart);
+    public Boolean doesTitleContain(String titlePart) {
+        new WebDriverWait(getWebDriver(), Duration.ofSeconds(10)).until(ExpectedConditions.titleContains(titlePart));
+        return true;
     }
 
     public Boolean areAllHeaderMenuItemsClickableOrVisible() {
@@ -70,58 +69,57 @@ public class AbstractPage extends AbstractPageComposite {
                 && headerMenu.isSaleLineVisible();
     }
 
-    public void clickHeaderL1Category(String categoryName){
+    public void clickHeaderL1Category(String categoryName) {
         headerMenu.clickL1MenuCategory(categoryName);
     }
 
-    public void clickHeaderL2Category(String l1CategoryName, String l2CategoryName){
+    public void clickHeaderL2Category(String l1CategoryName, String l2CategoryName) {
         headerMenu.hoverL1MenuCategory(l1CategoryName);
         headerMenu.clickL2MenuCategory(l2CategoryName);
     }
 
     // TODO: ???
-    public void clickHeaderSandalsL3Category(){
+    public void clickHeaderSandalsL3Category() {
         headerMenu.hoverL1MenuCategory("WOMEN");
         headerMenu.hoverL2MenuCategory("SHOES");
         headerMenu.clickSandalsL3MenuCategory();
     }
 
     public String getBreadCrumbText() {
-        return getItemText(breadCrumb);
+        return breadCrumb.getText();
     }
 
-    public void searchProductFromHeader(String searchedProductName){
+    public void searchProductFromHeader(String searchedProductName) {
         headerMenu.clickSearchButton();
-        wait.until(ExpectedConditions.visibilityOf(productSearchInput)).sendKeys(searchedProductName, Keys.ENTER);
+        productSearchInput.sendKeys(searchedProductName, Keys.ENTER);
     }
 
-    public List<ShoppingCartProduct> getCartPopUpProductsFromHeader(){
-        return wait
-                .until(ExpectedConditions.visibilityOfAllElements(cartProductsList))
+    public List<ShoppingCartProduct> getCartPopUpProductsFromHeader() {
+        return cartProductsList
+                .shouldHave(CollectionCondition.sizeGreaterThan(0))
                 .stream()
-                .map(elem -> new ShoppingCartProduct(driver, elem))
+                .map(ShoppingCartProduct::new)
                 .collect(Collectors.toList());
     }
 
-    public void clickGoToBagHeaderCartPopUpButton(){
+    public void clickGoToBagHeaderCartPopUpButton() {
         headerMenu.hoverCartButton();
-        clickItem(goToBagCartPopUpButton);
+        goToBagCartPopUpButton.click();
     }
 
-    public void hoverHeaderWishlistButton(){
+    public void hoverHeaderWishlistButton() {
         headerMenu.hoverWishlistButton();
     }
 
-    public List<WishlistProduct> getWishlistPopUpProductsFromHeader(){
-        return wait
-                .until(ExpectedConditions.visibilityOfAllElements(wishlistProductList))
+    public List<WishlistProduct> getWishlistPopUpProductsFromHeader() {
+        return wishlistProductList
                 .stream()
-                .map(elem -> new WishlistProduct(driver, elem))
+                .map(elem -> new WishlistProduct(elem))
                 .collect(Collectors.toList());
     }
 
-    public void clickGoToWishlistHeaderPopUpButton(){
+    public void clickGoToWishlistHeaderPopUpButton() {
         headerMenu.hoverWishlistButton();
-        clickItem(goToWishlistButton);
+        goToWishlistButton.click();
     }
 }

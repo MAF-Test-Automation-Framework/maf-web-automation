@@ -6,10 +6,13 @@ import that.composites.CategoryProduct;
 import that.composites.ShoppingCartProduct;
 import that.composites.WishlistProduct;
 import that.entities.Product;
+import that.pages.CartPage;
 import that.pages.ProductDetailsPage;
 
 import java.util.List;
 
+import static com.codeborne.selenide.Selenide.page;
+import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
 import static org.assertj.core.api.Assertions.assertThat;
 import static that.test_data.PageTitlesAndBreadCrumbs.*;
 
@@ -27,12 +30,12 @@ public class PDPTests extends AbstractBaseTest {
         String expectedBreadCrumbEnd = expectedProduct.getProductName();
         firstProduct.clickProduct();
 
-        ProductDetailsPage firstProductDetailsPage = new ProductDetailsPage(driver);
-        assertThat(firstProductDetailsPage.doesTitleContainPart(expectedBreadCrumbEnd))
+        ProductDetailsPage firstProductDetailsPage = page(ProductDetailsPage.class);
+        assertThat(firstProductDetailsPage.doesTitleContain(expectedBreadCrumbEnd))
                 .as("Does title contain %s", expectedBreadCrumbEnd)
                 .isTrue();
 
-        String actualBreadCrumb = firstProductDetailsPage.getPDPBreadCrumb();
+        String actualBreadCrumb = firstProductDetailsPage.getBreadCrumbText();
         assertThat(actualBreadCrumb).contains(WOMEN_SHOES_BREADCRUMB);
         assertThat(actualBreadCrumb).contains(expectedBreadCrumbEnd);
     }
@@ -46,7 +49,7 @@ public class PDPTests extends AbstractBaseTest {
         firstProduct.scrollToProduct();
         firstProduct.clickProduct();
 
-        ProductDetailsPage firstProductDetailsPage = new ProductDetailsPage(driver);
+        ProductDetailsPage firstProductDetailsPage = page(ProductDetailsPage.class);
         firstProductDetailsPage.clickProductDetailsLink();
 
         for (int tabIndex = 0; tabIndex < 3; tabIndex++) {
@@ -61,15 +64,15 @@ public class PDPTests extends AbstractBaseTest {
      * MAF_04: Click any PLP product, verify Product ID code from Product Details
      */
     @Test(groups = {"pdpTests"})
-    public void axSkuIdTest(){
+    public void axSkuIdTest() {
         CategoryProduct firstProduct = womenShoesPLPage.getProducts().get(0);
         firstProduct.scrollToProduct();
         firstProduct.clickProduct();
 
-        ProductDetailsPage firstProductDetailsPage = new ProductDetailsPage(driver);
+        ProductDetailsPage firstProductDetailsPage = page(ProductDetailsPage.class);
         firstProductDetailsPage.clickProductDetailsLink();
 
-        String currentUrl = driver.getCurrentUrl();
+        String currentUrl = getWebDriver().getCurrentUrl();
         String expectedProductId = currentUrl.substring(currentUrl.lastIndexOf("/") + 1);
         assertThat(firstProductDetailsPage.getProductId()).isEqualTo(expectedProductId);
     }
@@ -80,12 +83,12 @@ public class PDPTests extends AbstractBaseTest {
      * click 'Go to bag' button, verify user is redirected to the correct page
      */
     @Test(groups = {"pdpTests"})
-    public void addToBagPopUpTest(){
+    public void addToBagPopUpTest() {
         CategoryProduct firstProduct = womenShoesPLPage.getProducts().get(0);
         firstProduct.scrollToProduct();
         firstProduct.clickProduct();
 
-        ProductDetailsPage firstProductDetailsPage = new ProductDetailsPage(driver);
+        ProductDetailsPage firstProductDetailsPage = page(ProductDetailsPage.class);
         Product expectedProduct = firstProductDetailsPage.getProductInformation();
         firstProductDetailsPage.clickAddToCartButton();
 
@@ -106,7 +109,7 @@ public class PDPTests extends AbstractBaseTest {
                 .isTrue();
 
         firstProductDetailsPage.clickGoToBagHeaderCartPopUpButton();
-        assertThat(firstProductDetailsPage.hasTitleCorrectName(CART_PAGE_TITLE))
+        assertThat(firstProductDetailsPage.doesTitleContain(CART_PAGE_TITLE))
                 .as("Title should be %s", CART_PAGE_TITLE)
                 .isTrue();
     }
@@ -116,7 +119,7 @@ public class PDPTests extends AbstractBaseTest {
      * verify Product from Wishlist pop up windows is the same as chosen PLP Product
      */
     @Test(groups = {"pdpTests"})
-    public void addToWishlistFromPLPForGuestUserTest(){
+    public void addToWishlistFromPLPForGuestUserTest() {
         CategoryProduct firstProduct = womenShoesPLPage.getProducts().get(0);
         firstProduct.scrollToProduct();
         firstProduct.addToWishlist();
@@ -134,7 +137,7 @@ public class PDPTests extends AbstractBaseTest {
                 .isEqualTo(expectedProduct);
 
         womenShoesPLPage.clickGoToWishlistHeaderPopUpButton();
-        assertThat(womenShoesPLPage.hasTitleCorrectName(WISHLIST_PAGE_TITLE))
+        assertThat(womenShoesPLPage.doesTitleContain(WISHLIST_PAGE_TITLE))
                 .as("Title should be %s", WISHLIST_PAGE_TITLE)
                 .isTrue();
     }
@@ -144,11 +147,11 @@ public class PDPTests extends AbstractBaseTest {
      * verify Product from Wishlist pop up windows is the same as chosen PLP Product
      */
     @Test(groups = {"pdpTests"})
-    public void addToWishlistFromPDPForGuestUserTest(){
+    public void addToWishlistFromPDPForGuestUserTest() {
         CategoryProduct firstProduct = womenShoesPLPage.getProducts().get(0);
         firstProduct.scrollToProduct();
         firstProduct.clickProduct();
-        ProductDetailsPage firstProductDetailsPage = new ProductDetailsPage(driver);
+        ProductDetailsPage firstProductDetailsPage = page(ProductDetailsPage.class);
         Product expectedProduct = firstProductDetailsPage.getProductInformation();
 
         firstProductDetailsPage.clickAddToWishlistButton();
@@ -165,7 +168,7 @@ public class PDPTests extends AbstractBaseTest {
                 .isEqualTo(expectedProduct);
 
         womenShoesPLPage.clickGoToWishlistHeaderPopUpButton();
-        assertThat(womenShoesPLPage.hasTitleCorrectName(WISHLIST_PAGE_TITLE))
+        assertThat(womenShoesPLPage.doesTitleContain(WISHLIST_PAGE_TITLE))
                 .as("Title should be %s", WISHLIST_PAGE_TITLE)
                 .isTrue();
     }

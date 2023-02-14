@@ -1,36 +1,35 @@
 package that.composites;
 
+import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import that.entities.Product;
 
-public class ShoppingCartProduct extends BaseProduct{
+public class ShoppingCartProduct extends AbstractPageComposite {
+    private SelenideElement root;
     private By imageLinkLocator = By.cssSelector(".cx-image-container img");
     private By brandLocator = By.className("cx-name");
     private By productNameLocator = By.className("cx-code");
     private By priceLocator = By.cssSelector(".cx-price .cx-value:first-of-type");
     private By quantitySelectLocator = By.className("quantity-select");
-    public ShoppingCartProduct(WebDriver driver, WebElement root) {
-        super(driver, root);
+    public ShoppingCartProduct(SelenideElement root) {
+        this.root = root;
     }
 
-    public Product getProductInformation(){
-        return getProductInformation(brandLocator, productNameLocator, imageLinkLocator, priceLocator);
+    public Product getProductInformation() {
+        return getProductInformation(root, brandLocator, productNameLocator, imageLinkLocator, priceLocator);
     }
 
-    public int getProductCount(){
+    public int getProductCount() {
         Select productQuantitySelect =
-                new Select(wait.until(ExpectedConditions.presenceOfNestedElementLocatedBy(root, quantitySelectLocator)));
+                new Select(root.find(quantitySelectLocator));
         String productCount = productQuantitySelect.getFirstSelectedOption().getText();
         return Integer.parseInt(productCount);
     }
 
-    public void selectMaxAvailableProductCount(){
+    public void selectMaxAvailableProductCount() {
         Select productQuantitySelect =
-                new Select(wait.until(ExpectedConditions.presenceOfNestedElementLocatedBy(root, quantitySelectLocator)));
+                new Select(root.find(quantitySelectLocator));
         Integer maxProductCount = productQuantitySelect
                 .getOptions()
                 .stream()

@@ -1,22 +1,17 @@
 package that.pages;
 
-import org.openqa.selenium.WebDriver;
+import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
 import java.util.List;
 
 public class HomePage extends AbstractPage {
-
     public static final Integer EXPECTED_NUMBER_OF_BANNERS = 3;
     @FindBy(className = "sec-promo-banner")
-    private List<WebElement> bannerButtons;
+    private List<SelenideElement> bannerButtons;
 
-    public HomePage(WebDriver driver) {
-        super(driver);
-    }
-
-    public Boolean areBannerButtonsVisible(){
+    public Boolean areBannerButtonsVisible() {
         boolean areBannersDisplayed = bannerButtons
                 .stream()
                 .allMatch(WebElement::isDisplayed);

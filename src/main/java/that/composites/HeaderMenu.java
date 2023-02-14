@@ -1,80 +1,92 @@
 package that.composites;
 
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.ElementsCollection;
+import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.support.FindBy;
 
 import java.util.List;
 
-public class HeaderMenu extends AbstractPageComposite{
+public class HeaderMenu extends AbstractPageComposite {
     @FindBy(className = "SiteLinks")
-    private WebElement saleLine;
+    private SelenideElement saleLine;
 
-    @FindBy(css="[position='SiteLogo']")
-    private WebElement logo;
+    @FindBy(css = "[position='SiteLogo']")
+    private SelenideElement logo;
 
     @FindBy(className = "menu-item")
-    private List<WebElement> l1MenuCategories;
+    private ElementsCollection l1MenuCategories;
 
     @FindBy(css = "#WomenNavNode > li")
-    private List<WebElement> l2MenuCategories;
+    private List<SelenideElement> l2MenuCategories;
 
     @FindBy(className = "sandals")
-    private WebElement sandalsL3MenuCategory;
+    private SelenideElement sandalsL3MenuCategory;
 
     @FindBy(css = ".HeaderSearchBox .tab-icon")
-    private WebElement searchButton;
+    private SelenideElement searchButton;
 
     @FindBy(className = "myAccount-Component")
-    private WebElement myAccountButton;
+    private SelenideElement myAccountButton;
 
     @FindBy(className = "wishList-Component")
-    private WebElement wishlistButton;
+    private SelenideElement wishlistButton;
 
     @FindBy(className = "ThatUserMenuMiniBag")
-    private WebElement cartButton;
+    private SelenideElement cartButton;
 
-    public HeaderMenu(WebDriver driver) {
-        super(driver);
+    public Boolean isSaleLineVisible() {
+        saleLine.shouldBe(Condition.visible);
+        return true;
     }
 
-    public Boolean isSaleLineVisible(){
-        return saleLine.isDisplayed();
+    public Boolean isLogoClickable() {
+        logo.shouldBe(Condition.enabled);
+        return true;
     }
-    public Boolean isLogoClickable(){
-        return isItemClickable(logo);
+
+    public Boolean areTopHeaderItemsClickable() {
+        l1MenuCategories.forEach(category -> category.shouldBe(Condition.enabled));
+        return true;
     }
-    public Boolean areTopHeaderItemsClickable(){
-        return areListItemsClickable(l1MenuCategories);
+
+    public Boolean areRightHeaderItemsClickable() {
+        searchButton.shouldBe(Condition.enabled);
+        wishlistButton.shouldBe(Condition.enabled);
+        myAccountButton.shouldBe(Condition.enabled);
+        cartButton.shouldBe(Condition.enabled);
+        return true;
     }
-    public Boolean areRightHeaderItemsClickable(){
-        return isItemClickable(searchButton)
-                && isItemClickable(wishlistButton)
-                && isItemClickable(myAccountButton)
-                && isItemClickable(cartButton);
+
+    public void clickL1MenuCategory(String categoryName) {
+        getElementByText(l1MenuCategories, categoryName).click();
     }
-    public void clickL1MenuCategory(String categoryName){
-        clickListItem(l1MenuCategories, categoryName);
+
+    public void hoverL1MenuCategory(String categoryName) {
+        getElementByText(l1MenuCategories, categoryName).hover();
     }
-    public void hoverL1MenuCategory(String categoryName){
-        moveToListItem(l1MenuCategories, categoryName);
+
+    public void clickL2MenuCategory(String categoryName) {
+        getElementByText(l2MenuCategories, categoryName).click();
     }
-    public void clickL2MenuCategory(String categoryName){
-        clickListItem(l2MenuCategories, categoryName);
+
+    public void hoverL2MenuCategory(String categoryName) {
+        getElementByText(l2MenuCategories, categoryName).hover();
     }
-    public void hoverL2MenuCategory(String categoryName){
-        moveToListItem(l2MenuCategories, categoryName);
+
+    public void clickSandalsL3MenuCategory() {
+        sandalsL3MenuCategory.click();
     }
-    public void clickSandalsL3MenuCategory(){
-        clickItem(sandalsL3MenuCategory);
+
+    public void clickSearchButton() {
+        searchButton.click();
     }
-    public void clickSearchButton(){
-        clickItem(searchButton);
+
+    public void hoverCartButton() {
+        cartButton.hover();
     }
-    public void hoverCartButton(){
-        moveToItem(cartButton);
-    }
-    public void hoverWishlistButton(){
-        moveToItem(wishlistButton);
+
+    public void hoverWishlistButton() {
+        wishlistButton.hover();
     }
 }
