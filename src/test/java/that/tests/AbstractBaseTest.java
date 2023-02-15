@@ -41,6 +41,7 @@ public class AbstractBaseTest {
 
     private void driverSetUp() {
         Configuration.browser = "chrome";
+//        Configuration.baseUrl = "https://www.thatconceptstore.com/en-ae";
         Configuration.baseUrl = "https://that.c1xjddw2-majidalfu1-p2-public.model-t.cc.commerce.ondemand.com/en-ae";
         Configuration.headless = false;
         Configuration.timeout = 40000;
@@ -48,8 +49,6 @@ public class AbstractBaseTest {
         homePage = open("/", HomePage.class);
         getWebDriver().manage().window().maximize();
 
-        // TODO: May be it won't be needed
-        homePage.clickNotificationTestCloseButton();
         homePage.clickCookieNotificationCloseButton();
     }
 

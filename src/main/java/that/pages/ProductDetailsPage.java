@@ -71,7 +71,7 @@ public class ProductDetailsPage extends AbstractPage {
 
     public Product getProductInformation() {
         SelenideElement defaultImage = productImages.get(0);
-        return getProductInformation(brand, productName, defaultImage, price);
+        return new Product(brand, productName, defaultImage, price);
     }
 
 }

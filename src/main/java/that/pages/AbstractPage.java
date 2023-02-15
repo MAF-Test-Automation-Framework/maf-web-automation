@@ -40,17 +40,13 @@ public class AbstractPage extends AbstractPageComposite {
     private ElementsCollection cartProductsList;
 
     @FindBy(css = "header .item")
-    private List<SelenideElement> wishlistProductList;
+    private ElementsCollection wishlistProductList;
 
     @FindBy(className = "go-to-link")
     private SelenideElement goToWishlistButton;
 
     public AbstractPage() {
         headerMenu = page(HeaderMenu.class);
-    }
-
-    public void clickNotificationTestCloseButton() {
-        notificationTestCloseButton.click();
     }
 
     public void clickCookieNotificationCloseButton() {
@@ -67,10 +63,6 @@ public class AbstractPage extends AbstractPageComposite {
                 && headerMenu.areTopHeaderItemsClickable()
                 && headerMenu.isLogoClickable()
                 && headerMenu.isSaleLineVisible();
-    }
-
-    public void refreshPage(){
-        getWebDriver().navigate().refresh();
     }
 
     public void clickHeaderL1Category(String categoryName) {

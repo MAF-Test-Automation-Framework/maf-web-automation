@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 import static com.codeborne.selenide.Selenide.page;
 import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
 import static org.assertj.core.api.Assertions.assertThat;
+import static that.test_data.Categories.FilterOptions.*;
 import static that.test_data.PageTitlesAndBreadCrumbs.*;
 
 public class PDPTests extends AbstractBaseTest {
@@ -194,25 +195,38 @@ public class PDPTests extends AbstractBaseTest {
     }
 
     /**
-     * MAF_17, MAF_18: Sort list of products, verify it's sorted correctly, refresh page, verify again
+     * MAF_17, MAF_18: Sort list of products, scroll down to see more products, verify it's sorted correctly
      */
     @Test(groups = {"pdpTests"}, dataProvider = "TestDataForSorting")
     public void sortProductListTest(String sortOption, Comparator<Product> comparator) {
+        int twoPagesProductsCount = 40;
         womenShoesPLPage.sortProductsBy(sortOption);
 
-        List<Product> products = womenShoesPLPage.convertProductElementsToEntities(womenShoesPLPage.getProducts());
+        List<CategoryProduct> productElements = womenShoesPLPage.getProductsMoreThanOrEqual(twoPagesProductsCount);
+        List<Product> products = womenShoesPLPage.convertProductElementsToEntities(productElements);
         List<Product> sortedProducts = products
                 .stream()
                 .sorted(comparator)
                 .collect(Collectors.toList());
 
         assertThat(products).usingRecursiveComparison().isEqualTo(sortedProducts);
-
-        womenShoesPLPage.refreshPage();
-        List<Product> refreshedProducts = womenShoesPLPage.convertProductElementsToEntities(womenShoesPLPage.getProducts());
-
-        assertThat(refreshedProducts).usingRecursiveComparison().isEqualTo(sortedProducts);
     }
 
+    /**
+     * MAF_15: Filter products by 2 criteria, verify correct products are displayed, verify products quantity
+     */
+    @Test(groups = {"pdpTests"})
+    public void filterProductListTest() {
+        womenShoesPLPage.filterProducts(BRAND.getOption(), JUIN_BRAND.getOption());
+        int expectedFilteredProductsCount = womenShoesPLPage
+                .filterProducts(CATEGORY.getOption(), ON_SALE_CATEGORY.getOption());
+        List<CategoryProduct> allFilteredProducts = womenShoesPLPage.getProductsMoreThanOrEqual(expectedFilteredProductsCount);
+
+        assertThat(allFilteredProducts).hasSize(expectedFilteredProductsCount);
+        assertThat(allFilteredProducts)
+                .allSatisfy(product -> assertThat(product.getProductInformation().getBrand()).isEqualTo(JUIN_BRAND.getOption()));
+        assertThat(allFilteredProducts)
+                .allSatisfy(product -> assertThat(product.getProductInformation().getSale()).isTrue());
+    }
 }
 

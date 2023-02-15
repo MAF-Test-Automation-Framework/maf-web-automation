@@ -19,6 +19,16 @@ public class Categories {
         HIGHEST_PRICE("Highest Price");
 
         final String option;
+    }
 
+    @AllArgsConstructor
+    @Getter
+    public enum FilterOptions {
+        BRAND("Brand"),
+        JUIN_BRAND("3JUIN"),
+        CATEGORY("Category"),
+        ON_SALE_CATEGORY("On Sale");
+
+        final String option;
     }
 }

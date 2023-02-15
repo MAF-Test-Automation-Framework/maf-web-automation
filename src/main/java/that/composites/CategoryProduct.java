@@ -11,13 +11,14 @@ public class CategoryProduct extends AbstractPageComposite {
     private By mainImageLinkLocator = By.xpath("(//*[@class='custom-media-banner']//img)[1]");
     private By priceLocator = By.className("price-box");
     private By wishlistButtonLocator = By.className("heart");
+    private By saleTagLocator = By.className("tag-wrapper");
 
     public CategoryProduct(SelenideElement root) {
         this.root = root;
     }
 
     public Product getProductInformation() {
-        return getProductInformation(root, brandLocator, productNameLocator, mainImageLinkLocator, priceLocator);
+        return new Product(root, brandLocator, productNameLocator, mainImageLinkLocator, priceLocator, saleTagLocator);
     }
 
     public void clickProduct() {

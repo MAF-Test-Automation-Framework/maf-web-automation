@@ -1,28 +1,24 @@
 package that.composites;
 
+import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
-import org.openqa.selenium.By;
-import that.entities.Product;
 
 public class AbstractPageComposite {
 
     protected SelenideElement getElementByText(ElementsCollection listOfItems, String itemName) {
-        return listOfItems.stream()
+        return listOfItems
+                .shouldBe(CollectionCondition.sizeGreaterThan(0))
+                .stream()
                 .filter(item -> item.getText().equals(itemName))
                 .findFirst()
                 .get();
     }
 
-    protected Product getProductInformation(SelenideElement brand, SelenideElement productName, SelenideElement imageLink, SelenideElement price) {
-        return new Product(brand.getText(), productName.getText(), imageLink.getAttribute("src"), price.getText());
-    }
-
-    protected Product getProductInformation(SelenideElement root, By brandLocator, By productNameLocator, By imageLinkLocator, By priceLocator) {
-        SelenideElement brand = root.find(brandLocator);
-        SelenideElement productName = root.find(productNameLocator);
-        SelenideElement imageLink = root.find(imageLinkLocator);
-        SelenideElement price = root.find(priceLocator);
-        return getProductInformation(brand, productName, imageLink, price);
+    protected SelenideElement getElementContainsText(ElementsCollection listOfItems, String itemName) {
+        return listOfItems.stream()
+                .filter(item -> item.getText().contains(itemName))
+                .findFirst()
+                .get();
     }
 }

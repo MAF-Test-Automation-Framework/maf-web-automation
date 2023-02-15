@@ -19,7 +19,7 @@ public class ShoppingCartProduct extends AbstractPageComposite {
     }
 
     public Product getProductInformation() {
-        return getProductInformation(root, brandLocator, productNameLocator, imageLinkLocator, priceLocator);
+        return new Product(root, brandLocator, productNameLocator, imageLinkLocator, priceLocator);
     }
 
     public int getProductCount() {
