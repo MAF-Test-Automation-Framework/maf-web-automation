@@ -5,8 +5,6 @@ import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.support.FindBy;
 
-import java.util.List;
-
 public class HeaderMenu extends AbstractPageComposite {
     @FindBy(className = "SiteLinks")
     private SelenideElement saleLine;
@@ -18,7 +16,7 @@ public class HeaderMenu extends AbstractPageComposite {
     private ElementsCollection l1MenuCategories;
 
     @FindBy(css = "#WomenNavNode > li")
-    private List<SelenideElement> l2MenuCategories;
+    private ElementsCollection l2MenuCategories;
 
     @FindBy(className = "sandals")
     private SelenideElement sandalsL3MenuCategory;

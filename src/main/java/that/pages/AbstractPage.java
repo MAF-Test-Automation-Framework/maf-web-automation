@@ -69,6 +69,10 @@ public class AbstractPage extends AbstractPageComposite {
                 && headerMenu.isSaleLineVisible();
     }
 
+    public void refreshPage(){
+        getWebDriver().navigate().refresh();
+    }
+
     public void clickHeaderL1Category(String categoryName) {
         headerMenu.clickL1MenuCategory(categoryName);
     }

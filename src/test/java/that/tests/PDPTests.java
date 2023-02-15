@@ -9,7 +9,9 @@ import that.entities.Product;
 import that.pages.CartPage;
 import that.pages.ProductDetailsPage;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.codeborne.selenide.Selenide.page;
 import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
@@ -25,7 +27,6 @@ public class PDPTests extends AbstractBaseTest {
     public void pdpPageTest() {
         // TODO: PDP should pageear for related brand?
         CategoryProduct firstProduct = womenShoesPLPage.getProducts().get(0);
-        firstProduct.scrollToProduct();
         Product expectedProduct = firstProduct.getProductInformation();
         String expectedBreadCrumbEnd = expectedProduct.getProductName();
         firstProduct.clickProduct();
@@ -46,7 +47,6 @@ public class PDPTests extends AbstractBaseTest {
     @Test(groups = {"pdpTests"})
     public void productDetailsSectionTest() {
         CategoryProduct firstProduct = womenShoesPLPage.getProducts().get(0);
-        firstProduct.scrollToProduct();
         firstProduct.clickProduct();
 
         ProductDetailsPage firstProductDetailsPage = page(ProductDetailsPage.class);
@@ -66,7 +66,6 @@ public class PDPTests extends AbstractBaseTest {
     @Test(groups = {"pdpTests"})
     public void axSkuIdTest() {
         CategoryProduct firstProduct = womenShoesPLPage.getProducts().get(0);
-        firstProduct.scrollToProduct();
         firstProduct.clickProduct();
 
         ProductDetailsPage firstProductDetailsPage = page(ProductDetailsPage.class);
@@ -85,7 +84,6 @@ public class PDPTests extends AbstractBaseTest {
     @Test(groups = {"pdpTests"})
     public void addToBagPopUpTest() {
         CategoryProduct firstProduct = womenShoesPLPage.getProducts().get(0);
-        firstProduct.scrollToProduct();
         firstProduct.clickProduct();
 
         ProductDetailsPage firstProductDetailsPage = page(ProductDetailsPage.class);
@@ -120,7 +118,6 @@ public class PDPTests extends AbstractBaseTest {
     @Test(groups = {"pdpTests"})
     public void removeProductFromCartTest() {
         CategoryProduct firstProduct = womenShoesPLPage.getProducts().get(0);
-        firstProduct.scrollToProduct();
         firstProduct.clickProduct();
 
         ProductDetailsPage firstProductDetailsPage = page(ProductDetailsPage.class);
@@ -146,7 +143,6 @@ public class PDPTests extends AbstractBaseTest {
     @Test(groups = {"pdpTests"})
     public void addToWishlistFromPLPForGuestUserTest() {
         CategoryProduct firstProduct = womenShoesPLPage.getProducts().get(0);
-        firstProduct.scrollToProduct();
         firstProduct.addToWishlist();
         Product expectedProduct = firstProduct.getProductInformation();
 
@@ -174,7 +170,6 @@ public class PDPTests extends AbstractBaseTest {
     @Test(groups = {"pdpTests"})
     public void addToWishlistFromPDPForGuestUserTest() {
         CategoryProduct firstProduct = womenShoesPLPage.getProducts().get(0);
-        firstProduct.scrollToProduct();
         firstProduct.clickProduct();
         ProductDetailsPage firstProductDetailsPage = page(ProductDetailsPage.class);
         Product expectedProduct = firstProductDetailsPage.getProductInformation();
@@ -197,5 +192,27 @@ public class PDPTests extends AbstractBaseTest {
                 .as("Title should be %s", WISHLIST_PAGE_TITLE)
                 .isTrue();
     }
+
+    /**
+     * MAF_17, MAF_18: Sort list of products, verify it's sorted correctly, refresh page, verify again
+     */
+    @Test(groups = {"pdpTests"}, dataProvider = "TestDataForSorting")
+    public void sortProductListTest(String sortOption, Comparator<Product> comparator) {
+        womenShoesPLPage.sortProductsBy(sortOption);
+
+        List<Product> products = womenShoesPLPage.convertProductElementsToEntities(womenShoesPLPage.getProducts());
+        List<Product> sortedProducts = products
+                .stream()
+                .sorted(comparator)
+                .collect(Collectors.toList());
+
+        assertThat(products).usingRecursiveComparison().isEqualTo(sortedProducts);
+
+        womenShoesPLPage.refreshPage();
+        List<Product> refreshedProducts = womenShoesPLPage.convertProductElementsToEntities(womenShoesPLPage.getProducts());
+
+        assertThat(refreshedProducts).usingRecursiveComparison().isEqualTo(sortedProducts);
+    }
+
 }
 

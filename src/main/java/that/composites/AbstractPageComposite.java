@@ -1,14 +1,13 @@
 package that.composites;
 
+import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.By;
 import that.entities.Product;
 
-import java.util.List;
-
 public class AbstractPageComposite {
 
-    protected SelenideElement getElementByText(List<SelenideElement> listOfItems, String itemName) {
+    protected SelenideElement getElementByText(ElementsCollection listOfItems, String itemName) {
         return listOfItems.stream()
                 .filter(item -> item.getText().equals(itemName))
                 .findFirst()
