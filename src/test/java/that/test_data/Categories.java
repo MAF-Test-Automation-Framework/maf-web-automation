@@ -16,7 +16,8 @@ public class Categories {
     @Getter
     public enum SortOptions {
         LOWEST_PRICE("Lowest Price"),
-        HIGHEST_PRICE("Highest Price");
+        HIGHEST_PRICE("Highest Price"),
+        RECOMMENDED("Recommended");
 
         final String option;
     }

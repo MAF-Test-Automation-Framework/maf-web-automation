@@ -18,6 +18,7 @@ import static com.codeborne.selenide.Selenide.page;
 import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
 import static org.assertj.core.api.Assertions.assertThat;
 import static that.test_data.Categories.FilterOptions.*;
+import static that.test_data.Categories.SortOptions.RECOMMENDED;
 import static that.test_data.PageTitlesAndBreadCrumbs.*;
 import static that.test_data.User.TEST_USER;
 
@@ -245,6 +246,14 @@ public class PDPTests extends AbstractBaseTest {
                 .allSatisfy(product -> assertThat(product.getProductInformation().getBrand()).isEqualTo(JUIN_BRAND.getOption()));
         assertThat(allFilteredProducts)
                 .allSatisfy(product -> assertThat(product.getProductInformation().getSale()).isTrue());
+    }
+
+    /**
+     * MAF_16: Verify Recommended option selected by default
+     */
+    @Test(groups = {"pdpTests"})
+    public void defaultSortingOptionTest() {
+        assertThat(womenShoesPLPage.getSelectedOption()).isEqualTo(RECOMMENDED.getOption());
     }
 }
 

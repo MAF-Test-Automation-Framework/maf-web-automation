@@ -16,6 +16,7 @@ import static utils.Utils.getIntegerValueOfPrice;
 public class ProductsListPage extends AbstractPage {
 
     private By sortButtonOptionsLocator = By.cssSelector("[role='option']");
+    private By sortButtonSelectedOptionLocator = By.cssSelector("[role='option'][aria-selected='true']");
     private By l2FilterCategoriesLocator = By.className("checkbox");
     private By l2FilterCategoriesProductCountLocator = By.className("product-count");
     @FindBy(tagName = "app-product-list-item")
@@ -50,6 +51,11 @@ public class ProductsListPage extends AbstractPage {
     public void sortProductsBy(String option) {
         sortButton.click();
         getElementByText(sortButton.findAll(sortButtonOptionsLocator), option).click();
+    }
+
+    public String getSelectedOption(){
+        sortButton.click();
+        return sortButton.find(sortButtonSelectedOptionLocator).getText();
     }
 
 
