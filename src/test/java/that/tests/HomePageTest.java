@@ -2,15 +2,18 @@ package that.tests;
 
 import org.testng.annotations.Test;
 import that.composites.CategoryProduct;
+import that.pages.AccountPage;
 import that.pages.ProductsListPage;
 
 import java.util.List;
 
 import static com.codeborne.selenide.Selenide.page;
 import static org.assertj.core.api.Assertions.assertThat;
+import static that.test_data.Categories.AccountPageSection.*;
 import static that.test_data.Categories.L1Categories.WOMEN;
 import static that.test_data.Categories.L2Categories.SHOES;
 import static that.test_data.PageTitlesAndBreadCrumbs.*;
+import static that.test_data.User.TEST_USER;
 
 public class HomePageTest extends AbstractBaseTest {
     /**
@@ -86,5 +89,36 @@ public class HomePageTest extends AbstractBaseTest {
         foundProducts.get(0).scrollToProduct();
         assertThat(foundProducts)
                 .allSatisfy(product -> assertThat(product.getProductInformation().getProductName()).contains(searchedKey));
+    }
+
+    /**
+     * MAF_14: Login, go to Account page, verify main Account page elements are displayed
+     */
+    @Test(groups = {"homePageTests"})
+    public void accountPageDetailsTest(){
+        String[] yourAccountSubsections = new String[]{
+                COMPLETE_YOUR_DETAILS.getSection(),
+                YOUR_WISHLIST.getSection(),
+                ACCOUNT_SIGN_OUT.getSection()};
+
+        homePage.login(TEST_USER.getEmail(), TEST_USER.getPassword());
+        homePage.goToAccountPage();
+        AccountPage accountPage = page(AccountPage.class);
+
+        for (String section : accountPage.getSectionNames()){
+            accountPage.clickSection(section);
+
+            if (section.equals(YOUR_ACCOUNT.getSection())){
+                accountPage.clickSection(YOUR_ACCOUNT.getSection());
+                assertThat(accountPage.isSectionHeadersContains(yourAccountSubsections))
+                        .as("Section headers should contain")
+                        .isTrue();
+            }
+            else{
+                assertThat(accountPage.isSectionHeadersContains(section))
+                        .as("Section headers should contain %s", section)
+                        .isTrue();
+            }
+        }
     }
 }

@@ -1,8 +1,10 @@
 package that.composites;
 
+import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
 public class HeaderMenu extends AbstractPageComposite {
@@ -27,11 +29,17 @@ public class HeaderMenu extends AbstractPageComposite {
     @FindBy(className = "myAccount-Component")
     private SelenideElement myAccountButton;
 
-    @FindBy(className = "wishList-Component")
+    @FindBy(css = ".wishList-Component .tab-icon")
     private SelenideElement wishlistButton;
 
     @FindBy(className = "ThatUserMenuMiniBag")
     private SelenideElement cartButton;
+
+    @FindBy(id = "//button[contains(text(), 'Login')]")
+    private SelenideElement loginButton;
+
+    @FindBy(className = "user-details")
+    private SelenideElement userDetailsButton;
 
     public Boolean isSaleLineVisible() {
         saleLine.shouldBe(Condition.visible);
@@ -44,7 +52,7 @@ public class HeaderMenu extends AbstractPageComposite {
     }
 
     public Boolean areTopHeaderItemsClickable() {
-        l1MenuCategories.forEach(category -> category.shouldBe(Condition.enabled));
+        l1MenuCategories.shouldBe(CollectionCondition.allMatch("All elements should be clickable", WebElement::isEnabled));
         return true;
     }
 
@@ -84,7 +92,18 @@ public class HeaderMenu extends AbstractPageComposite {
         cartButton.hover();
     }
 
-    public void hoverWishlistButton() {
-        wishlistButton.hover();
+    public void clickWishlistButton() {
+        wishlistButton.click();
+    }
+
+    public void hoverMyAccountButton(){
+        myAccountButton.shouldBe(Condition.visible).hover();
+    }
+    public void clickUserDetailsButton(){
+        userDetailsButton.click();
+    }
+
+    public void clickLoginButton(){
+        loginButton.click();
     }
 }

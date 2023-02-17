@@ -31,4 +31,14 @@ public class Categories {
 
         final String option;
     }
+
+    @AllArgsConstructor
+    @Getter
+    public enum AccountPageSection{
+        YOUR_ACCOUNT("YOUR ACCOUNT"),
+        COMPLETE_YOUR_DETAILS("COMPLETE YOUR DETAILS"),
+        YOUR_WISHLIST("YOUR WISHLIST"),
+        ACCOUNT_SIGN_OUT("ACCOUNT SIGN OUT");
+        final String section;
+        }
 }

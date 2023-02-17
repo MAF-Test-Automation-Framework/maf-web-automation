@@ -10,7 +10,6 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import that.composites.AbstractPageComposite;
 import that.composites.HeaderMenu;
 import that.composites.ShoppingCartProduct;
-import that.composites.WishlistProduct;
 
 import java.time.Duration;
 import java.util.List;
@@ -21,8 +20,6 @@ import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
 
 public class AbstractPage extends AbstractPageComposite {
     HeaderMenu headerMenu;
-    @FindBy(className = "ab-close-button")
-    private SelenideElement notificationTestCloseButton;
 
     @FindBy(className = "cookie-warning-forced-close-button")
     private SelenideElement cookieNotificationButton;
@@ -39,11 +36,14 @@ public class AbstractPage extends AbstractPageComposite {
     @FindBy(css = "header cx-cart-item")
     private ElementsCollection cartProductsList;
 
-    @FindBy(css = "header .item")
-    private ElementsCollection wishlistProductList;
+    @FindBy(id = "email")
+    private SelenideElement emailInput;
 
-    @FindBy(className = "go-to-link")
-    private SelenideElement goToWishlistButton;
+    @FindBy(id = "password")
+    private SelenideElement passwordInput;
+
+    @FindBy(xpath = "//button[contains(text(), 'Sign in')]")
+    private SelenideElement signInButton;
 
     public AbstractPage() {
         headerMenu = page(HeaderMenu.class);
@@ -103,19 +103,21 @@ public class AbstractPage extends AbstractPageComposite {
         goToBagCartPopUpButton.click();
     }
 
-    public void hoverHeaderWishlistButton() {
-        headerMenu.hoverWishlistButton();
+    public void clickHeaderWishlistButton() {
+        headerMenu.clickWishlistButton();
     }
 
-    public List<WishlistProduct> getWishlistPopUpProductsFromHeader() {
-        return wishlistProductList
-                .stream()
-                .map(elem -> new WishlistProduct(elem))
-                .collect(Collectors.toList());
+    public void login(String email, String password){
+        headerMenu.hoverMyAccountButton();
+        headerMenu.clickLoginButton();
+
+        emailInput.sendKeys(email);
+        passwordInput.sendKeys(password);
+        signInButton.click();
     }
 
-    public void clickGoToWishlistHeaderPopUpButton() {
-        headerMenu.hoverWishlistButton();
-        goToWishlistButton.click();
+    public void goToAccountPage(){
+        headerMenu.hoverMyAccountButton();
+        headerMenu.clickUserDetailsButton();
     }
 }

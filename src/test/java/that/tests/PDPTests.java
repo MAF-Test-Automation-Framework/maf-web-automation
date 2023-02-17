@@ -8,6 +8,7 @@ import that.composites.WishlistProduct;
 import that.entities.Product;
 import that.pages.CartPage;
 import that.pages.ProductDetailsPage;
+import that.pages.WishlistPage;
 
 import java.util.Comparator;
 import java.util.List;
@@ -18,6 +19,7 @@ import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
 import static org.assertj.core.api.Assertions.assertThat;
 import static that.test_data.Categories.FilterOptions.*;
 import static that.test_data.PageTitlesAndBreadCrumbs.*;
+import static that.test_data.User.TEST_USER;
 
 public class PDPTests extends AbstractBaseTest {
 
@@ -139,7 +141,8 @@ public class PDPTests extends AbstractBaseTest {
 
     /**
      * MAF_09: Go to PLP as Guest user, add any product to wishlist,
-     * verify Product from Wishlist pop up windows is the same as chosen PLP Product
+     * verify Product from Wishlist is the same as chosen PLP Product, remove from wishlist icon is displayed,
+     * move product to bag, verify it's removed from Wishlist
      */
     @Test(groups = {"pdpTests"})
     public void addToWishlistFromPLPForGuestUserTest() {
@@ -147,26 +150,34 @@ public class PDPTests extends AbstractBaseTest {
         firstProduct.addToWishlist();
         Product expectedProduct = firstProduct.getProductInformation();
 
-        womenShoesPLPage.hoverHeaderWishlistButton();
-        List<WishlistProduct> wishlistProducts = womenShoesPLPage.getWishlistPopUpProductsFromHeader();
-        Assert.assertEquals(1, wishlistProducts.size());
+        womenShoesPLPage.clickHeaderWishlistButton();
+        assertThat(womenShoesPLPage.doesTitleContain(WISHLIST_PAGE_TITLE))
+                .as("Title should be %s", WISHLIST_PAGE_TITLE)
+                .isTrue();
+
+        WishlistPage wishlistPage = page(WishlistPage.class);
+        List<WishlistProduct> wishlistProducts = wishlistPage.getProducts();
+        assertThat(wishlistProducts).hasSize(1);
 
         WishlistProduct wishlistProduct = wishlistProducts.get(0);
+        assertThat(wishlistProduct.removeFromWishlistBtnIsDisplayed())
+                .as("Remove from wishlist icon should be displayed")
+                .isTrue();
+
         Product actualProduct = wishlistProduct.getProductInformation();
         assertThat(actualProduct)
                 .usingRecursiveComparison()
                 .ignoringFields("imageLink")
                 .isEqualTo(expectedProduct);
 
-        womenShoesPLPage.clickGoToWishlistHeaderPopUpButton();
-        assertThat(womenShoesPLPage.doesTitleContain(WISHLIST_PAGE_TITLE))
-                .as("Title should be %s", WISHLIST_PAGE_TITLE)
-                .isTrue();
+        wishlistProduct.clickMoveToBagButton();
+        assertThat(wishlistPage.getProducts()).hasSize(0);
     }
 
     /**
-     * MAF_09: Go to PDP as Guest user, add any product to wishlist,
-     * verify Product from Wishlist pop up windows is the same as chosen PLP Product
+     * MAF_09: Go to PDP as Guest user, add any product to wishlist, go to Wishlist page,
+     * verify Product from Wishlist is the same as chosen PLP Product, remove from wishlist icon is displayed,
+     * move product to bag, verify it's removed from Wishlist
      */
     @Test(groups = {"pdpTests"})
     public void addToWishlistFromPDPForGuestUserTest() {
@@ -177,21 +188,28 @@ public class PDPTests extends AbstractBaseTest {
 
         firstProductDetailsPage.clickAddToWishlistButton();
 
-        womenShoesPLPage.hoverHeaderWishlistButton();
-        List<WishlistProduct> wishlistProducts = womenShoesPLPage.getWishlistPopUpProductsFromHeader();
-        Assert.assertEquals(1, wishlistProducts.size());
+        womenShoesPLPage.clickHeaderWishlistButton();
+        assertThat(womenShoesPLPage.doesTitleContain(WISHLIST_PAGE_TITLE))
+                .as("Title should be %s", WISHLIST_PAGE_TITLE)
+                .isTrue();
+
+        WishlistPage wishlistPage = page(WishlistPage.class);
+        List<WishlistProduct> wishlistProducts = wishlistPage.getProducts();
+        assertThat(wishlistProducts).hasSize(1);
 
         WishlistProduct wishlistProduct = wishlistProducts.get(0);
+        assertThat(wishlistProduct.removeFromWishlistBtnIsDisplayed())
+                .as("Remove from wishlist icon should be displayed")
+                .isTrue();
+
         Product actualProduct = wishlistProduct.getProductInformation();
         assertThat(actualProduct)
                 .usingRecursiveComparison()
                 .ignoringFields("imageLink")
                 .isEqualTo(expectedProduct);
 
-        womenShoesPLPage.clickGoToWishlistHeaderPopUpButton();
-        assertThat(womenShoesPLPage.doesTitleContain(WISHLIST_PAGE_TITLE))
-                .as("Title should be %s", WISHLIST_PAGE_TITLE)
-                .isTrue();
+        wishlistProduct.clickMoveToBagButton();
+        assertThat(wishlistPage.getProducts()).hasSize(0);
     }
 
     /**

@@ -11,5 +11,4 @@ public class PageTitlesAndBreadCrumbs {
     public final static String WOMEN_SHOES_BREADCRUMB = "Home\nWomen\nShoes";
     public final static String WOMEN_SHOES_SANDALS_BREADCRUMB = "Home\nWomen\nWomen Shoes\nSandals";
 
-
 }

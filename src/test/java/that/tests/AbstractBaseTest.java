@@ -1,6 +1,7 @@
 package that.tests;
 
 import com.codeborne.selenide.Configuration;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import that.entities.Product;
@@ -9,6 +10,7 @@ import that.pages.ProductsListPage;
 
 import java.util.Comparator;
 
+import static com.codeborne.selenide.Selenide.closeWebDriver;
 import static com.codeborne.selenide.Selenide.open;
 import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
 import static that.test_data.Categories.SortOptions.HIGHEST_PRICE;
@@ -29,16 +31,6 @@ public class AbstractBaseTest {
         womenShoesPLPage = open("/c/women-shoes", ProductsListPage.class);
     }
 
-    @DataProvider(name = "TestDataForSorting")
-    public Object[][] getData() {
-        Comparator<Product> comparator = Comparator.comparing(Product::getPrice);
-        return new Object[][]
-                {
-                        {LOWEST_PRICE.getOption(), comparator},
-                        {HIGHEST_PRICE.getOption(), comparator.reversed()}
-                };
-    }
-
     private void driverSetUp() {
         Configuration.browser = "chrome";
 //        Configuration.baseUrl = "https://www.thatconceptstore.com/en-ae";
@@ -50,6 +42,21 @@ public class AbstractBaseTest {
         getWebDriver().manage().window().maximize();
 
         homePage.clickCookieNotificationCloseButton();
+    }
+
+    @AfterMethod
+    public void tearUp(){
+        closeWebDriver();
+    }
+
+    @DataProvider(name = "TestDataForSorting")
+    public Object[][] getSortingData() {
+        Comparator<Product> comparator = Comparator.comparing(Product::getPrice);
+        return new Object[][]
+                {
+                        {LOWEST_PRICE.getOption(), comparator},
+                        {HIGHEST_PRICE.getOption(), comparator.reversed()}
+                };
     }
 
 }
