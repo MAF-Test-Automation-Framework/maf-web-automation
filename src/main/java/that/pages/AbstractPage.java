@@ -10,6 +10,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import that.composites.AbstractPageComposite;
 import that.composites.HeaderMenu;
 import that.composites.ShoppingCartProduct;
+import that.composites.UserDataForm;
+import that.entities.User;
 
 import java.time.Duration;
 import java.util.List;
@@ -20,6 +22,7 @@ import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
 
 public class AbstractPage extends AbstractPageComposite {
     HeaderMenu headerMenu;
+    UserDataForm userDataForm;
 
     @FindBy(className = "cookie-warning-forced-close-button")
     private SelenideElement cookieNotificationButton;
@@ -36,17 +39,9 @@ public class AbstractPage extends AbstractPageComposite {
     @FindBy(css = "header cx-cart-item")
     private ElementsCollection cartProductsList;
 
-    @FindBy(id = "email")
-    private SelenideElement emailInput;
-
-    @FindBy(id = "password")
-    private SelenideElement passwordInput;
-
-    @FindBy(xpath = "//button[contains(text(), 'Sign in')]")
-    private SelenideElement signInButton;
-
     public AbstractPage() {
         headerMenu = page(HeaderMenu.class);
+        userDataForm = page(UserDataForm.class);
     }
 
     public void clickCookieNotificationCloseButton() {
@@ -107,17 +102,37 @@ public class AbstractPage extends AbstractPageComposite {
         headerMenu.clickWishlistButton();
     }
 
-    public void login(String email, String password){
+    public void login(User user){
         headerMenu.hoverMyAccountButton();
         headerMenu.clickLoginButton();
 
-        emailInput.sendKeys(email);
-        passwordInput.sendKeys(password);
-        signInButton.click();
+        userDataForm.fillEmail(user.getEmail());
+        userDataForm.fillPassword(user.getPassword());
+        userDataForm.clickSignInButton();
     }
 
     public void goToAccountPage(){
         headerMenu.hoverMyAccountButton();
         headerMenu.clickUserDetailsButton();
+    }
+
+    public void logout(){
+        headerMenu.hoverMyAccountButton();
+        headerMenu.clickLogoutButton();
+    }
+
+    public void signUp(User user){
+        headerMenu.hoverMyAccountButton();
+        headerMenu.clickRegisterButton();
+
+        userDataForm.selectTitle(user.getTitle());
+        userDataForm.fillDateOfBirth(user.getYear(), user.getMonth(), user.getDay());
+        userDataForm.fillNationality(user.getNationality());
+        userDataForm.fillEmail(user.getEmail());
+        userDataForm.fillPassword(user.getPassword());
+        userDataForm.fillName(user.getFirstName(), user.getLastName());
+        userDataForm.fillPhoneNumber(user.getPhoneNumber());
+
+        userDataForm.clickSignUpButton();
     }
 }

@@ -13,7 +13,8 @@ import static that.test_data.Categories.AccountPageSection.*;
 import static that.test_data.Categories.L1Categories.WOMEN;
 import static that.test_data.Categories.L2Categories.SHOES;
 import static that.test_data.PageTitlesAndBreadCrumbs.*;
-import static that.test_data.User.TEST_USER;
+import static that.entities.User.LOGIN_TEST_USER;
+import static that.entities.User.SIGN_UP_TEST_USER;
 
 public class HomePageTest extends AbstractBaseTest {
     /**
@@ -101,7 +102,7 @@ public class HomePageTest extends AbstractBaseTest {
                 YOUR_WISHLIST.getSection(),
                 ACCOUNT_SIGN_OUT.getSection()};
 
-        homePage.login(TEST_USER.getEmail(), TEST_USER.getPassword());
+        homePage.login(LOGIN_TEST_USER);
         homePage.goToAccountPage();
         AccountPage accountPage = page(AccountPage.class);
 
@@ -120,5 +121,13 @@ public class HomePageTest extends AbstractBaseTest {
                         .isTrue();
             }
         }
+    }
+
+    /**
+     * MAF_11:
+     */
+    @Test(groups = {"homePageTests"})
+    public void signInSignUpTest() {
+        homePage.signUp(SIGN_UP_TEST_USER);
     }
 }

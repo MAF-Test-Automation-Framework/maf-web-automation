@@ -20,7 +20,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static that.test_data.Categories.FilterOptions.*;
 import static that.test_data.Categories.SortOptions.RECOMMENDED;
 import static that.test_data.PageTitlesAndBreadCrumbs.*;
-import static that.test_data.User.TEST_USER;
 
 public class PDPTests extends AbstractBaseTest {
 

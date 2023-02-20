@@ -35,8 +35,14 @@ public class HeaderMenu extends AbstractPageComposite {
     @FindBy(className = "ThatUserMenuMiniBag")
     private SelenideElement cartButton;
 
-    @FindBy(id = "//button[contains(text(), 'Login')]")
+    @FindBy(xpath = "//button[contains(text(), 'Login')]")
     private SelenideElement loginButton;
+
+    @FindBy(xpath = "//button[contains(text(), 'Logout')]")
+    private SelenideElement logoutButton;
+
+    @FindBy(xpath = "//button[contains(text(), 'register now')]")
+    private SelenideElement registerNowButton;
 
     @FindBy(className = "user-details")
     private SelenideElement userDetailsButton;
@@ -105,5 +111,12 @@ public class HeaderMenu extends AbstractPageComposite {
 
     public void clickLoginButton(){
         loginButton.click();
+    }
+
+    public void clickLogoutButton() {
+        logoutButton.click();
+    }
+    public void clickRegisterButton(){
+        registerNowButton.click();
     }
 }
