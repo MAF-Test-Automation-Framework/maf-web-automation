@@ -50,6 +50,9 @@ public class SignInSignUpUserForm extends AbstractPageComposite {
     @FindBy(id = "submit-button")
     private SelenideElement signUpButton;
 
+    @FindBy(xpath = "//button[contains(text(), 'Ok')]")
+    private SelenideElement emailCheckConfirmationButton;
+
     public void fillEmail(String email) {
         emailInput.sendKeys(email);
     }
@@ -92,5 +95,9 @@ public class SignInSignUpUserForm extends AbstractPageComposite {
 
     public void clickSignUpButton() {
         signUpButton.click();
+    }
+
+    public void clickEmailCheckConfirmationBtn(){
+        emailCheckConfirmationButton.click();
     }
 }

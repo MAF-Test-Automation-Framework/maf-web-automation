@@ -114,6 +114,10 @@ public class HeaderMenu extends AbstractPageComposite {
         userDetailsButton.click();
     }
 
+    public String getUserDetailsButtonText() {
+        return userDetailsButton.getText();
+    }
+
     public void clickLoginButton() {
         loginButton.shouldBe(Condition.enabled).click();
     }

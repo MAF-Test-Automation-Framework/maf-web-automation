@@ -128,5 +128,15 @@ public class HomePageTest extends AbstractBaseTest {
     @Test(groups = {"homePageTests"})
     public void signInSignUpTest() {
         homePage.signUp(TEST_USER);
+        assertThat(homePage.getHeaderAccountPopUpUserDetailsText())
+                .contains(TEST_USER.getFirstName())
+                .contains(TEST_USER.getLastName());
+
+        homePage.logout();
+
+        homePage.login(TEST_USER);
+        assertThat(homePage.getHeaderAccountPopUpUserDetailsText())
+                .contains(TEST_USER.getFirstName())
+                .contains(TEST_USER.getLastName());
     }
 }

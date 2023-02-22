@@ -148,10 +148,17 @@ public class AbstractPage extends AbstractPageComposite {
         userDataForm.fillPhoneNumber(user.getPhoneNumber());
 
         userDataForm.clickSignUpButton();
+        userDataForm.clickEmailCheckConfirmationBtn();
+        userDataForm.clickSignUpButton();
     }
 
     public void checkoutAsGuest(String guestEmail) {
         guestEmailInput.sendKeys(guestEmail);
         guestCheckoutButton.click();
+    }
+
+    public String getHeaderAccountPopUpUserDetailsText(){
+        headerMenu.hoverMyAccountButton();
+        return headerMenu.getUserDetailsButtonText();
     }
 }
