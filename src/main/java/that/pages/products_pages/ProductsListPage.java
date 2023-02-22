@@ -1,12 +1,13 @@
-package that.pages;
+package that.pages.products_pages;
 
 import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.By;
 import org.openqa.selenium.support.FindBy;
-import that.composites.CategoryProduct;
+import that.composites.products.CategoryProduct;
 import that.entities.Product;
+import that.pages.AbstractPage;
 
 import java.util.List;
 import java.util.stream.Collectors;

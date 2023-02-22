@@ -9,8 +9,8 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import that.composites.AbstractPageComposite;
 import that.composites.HeaderMenu;
-import that.composites.ShoppingCartProduct;
-import that.composites.UserDataForm;
+import that.composites.SignInSignUpUserForm;
+import that.composites.products.ShoppingCartProduct;
 import that.entities.User;
 
 import java.time.Duration;
@@ -22,7 +22,7 @@ import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
 
 public class AbstractPage extends AbstractPageComposite {
     HeaderMenu headerMenu;
-    UserDataForm userDataForm;
+    SignInSignUpUserForm userDataForm;
 
     @FindBy(className = "cookie-warning-forced-close-button")
     private SelenideElement cookieNotificationButton;
@@ -50,7 +50,7 @@ public class AbstractPage extends AbstractPageComposite {
 
     public AbstractPage() {
         headerMenu = page(HeaderMenu.class);
-        userDataForm = page(UserDataForm.class);
+        userDataForm = page(SignInSignUpUserForm.class);
     }
 
     public void clickCookieNotificationCloseButton() {
@@ -120,7 +120,7 @@ public class AbstractPage extends AbstractPageComposite {
         userDataForm.clickSignInButton();
     }
 
-    public void goToAccountPage() {
+    public void clickUserDetailsHeaderAccountPopUpBtn() {
         headerMenu.hoverMyAccountButton();
         headerMenu.clickUserDetailsButton();
     }

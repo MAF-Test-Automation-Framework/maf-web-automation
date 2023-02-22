@@ -1,8 +1,9 @@
-package that.composites;
+package that.composites.products;
 
 import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.By;
 import org.openqa.selenium.support.ui.Select;
+import that.composites.AbstractPageComposite;
 import that.entities.Product;
 
 public class ShoppingCartProduct extends AbstractPageComposite {

@@ -1,10 +1,11 @@
-package that.pages;
+package that.pages.products_pages;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.support.FindBy;
 import that.entities.Product;
+import that.pages.AbstractPage;
 
 public class ProductDetailsPage extends AbstractPage {
     public static final String PRODUCT_ID_PREFIX = "Product ID:";

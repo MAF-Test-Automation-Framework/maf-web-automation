@@ -1,4 +1,4 @@
-package that.pages;
+package that.pages.users_pages;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.ElementsCollection;
@@ -8,6 +8,7 @@ import org.openqa.selenium.support.FindBy;
 import that.entities.BankCard;
 import that.entities.DeliveryAddress;
 import that.entities.User;
+import that.pages.AbstractPage;
 
 public class CheckoutPage extends AbstractPage {
     private By dropdownOptionsLocator = By.className("ng-option");

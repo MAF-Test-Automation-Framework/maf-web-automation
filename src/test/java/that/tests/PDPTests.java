@@ -2,14 +2,14 @@ package that.tests;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
-import that.composites.CategoryProduct;
-import that.composites.ShoppingCartProduct;
-import that.composites.WishlistProduct;
+import that.composites.products.CategoryProduct;
+import that.composites.products.ShoppingCartProduct;
+import that.composites.products.WishlistProduct;
 import that.entities.Product;
-import that.pages.CartPage;
-import that.pages.CheckoutPage;
-import that.pages.ProductDetailsPage;
-import that.pages.WishlistPage;
+import that.pages.users_pages.CartPage;
+import that.pages.users_pages.CheckoutPage;
+import that.pages.products_pages.ProductDetailsPage;
+import that.pages.users_pages.WishlistPage;
 
 import java.util.Comparator;
 import java.util.List;

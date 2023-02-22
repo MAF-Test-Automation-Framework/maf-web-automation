@@ -6,7 +6,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import that.entities.Product;
 import that.pages.HomePage;
-import that.pages.ProductsListPage;
+import that.pages.products_pages.ProductsListPage;
 
 import java.util.Comparator;
 

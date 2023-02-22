@@ -1,7 +1,8 @@
-package that.composites;
+package that.composites.products;
 
 import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.By;
+import that.composites.AbstractPageComposite;
 import that.entities.Product;
 
 public class CategoryProduct extends AbstractPageComposite {

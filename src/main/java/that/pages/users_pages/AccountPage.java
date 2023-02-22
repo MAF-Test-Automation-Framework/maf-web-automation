@@ -1,12 +1,13 @@
-package that.pages;
+package that.pages.users_pages;
 
 import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.ElementsCollection;
 import org.openqa.selenium.support.FindBy;
+import that.pages.AbstractPage;
 
 import java.util.List;
 
-public class AccountPage extends AbstractPage{
+public class AccountPage extends AbstractPage {
     @FindBy(className = "headline")
     private ElementsCollection sectionHeaders;
 

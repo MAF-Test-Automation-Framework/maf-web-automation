@@ -1,9 +1,9 @@
 package that.tests;
 
 import org.testng.annotations.Test;
-import that.composites.CategoryProduct;
-import that.pages.AccountPage;
-import that.pages.ProductsListPage;
+import that.composites.products.CategoryProduct;
+import that.pages.users_pages.AccountPage;
+import that.pages.products_pages.ProductsListPage;
 
 import java.util.List;
 
@@ -103,7 +103,7 @@ public class HomePageTest extends AbstractBaseTest {
                 ACCOUNT_SIGN_OUT.getSection()};
 
         homePage.login(LOGIN_TEST_USER);
-        homePage.goToAccountPage();
+        homePage.clickUserDetailsHeaderAccountPopUpBtn();
         AccountPage accountPage = page(AccountPage.class);
 
         for (String section : accountPage.getSectionNames()) {

@@ -4,7 +4,7 @@ import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.support.FindBy;
 
-public class UserDataForm extends AbstractPageComposite {
+public class SignInSignUpUserForm extends AbstractPageComposite {
     @FindBy(id = "email")
     private SelenideElement emailInput;
 
