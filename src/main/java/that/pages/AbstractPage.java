@@ -36,6 +36,15 @@ public class AbstractPage extends AbstractPageComposite {
     @FindBy(xpath = "//*[contains(text(), 'Go to bag')]")
     private SelenideElement goToBagCartPopUpButton;
 
+    @FindBy(xpath = "//*[contains(text(), 'Checkout Now')]")
+    private SelenideElement checkoutNowPopUpButton;
+
+    @FindBy(className = "btn-guest-email")
+    private SelenideElement guestCheckoutButton;
+
+    @FindBy(id = "cartEmail")
+    private SelenideElement guestEmailInput;
+
     @FindBy(css = "header cx-cart-item")
     private ElementsCollection cartProductsList;
 
@@ -102,7 +111,7 @@ public class AbstractPage extends AbstractPageComposite {
         headerMenu.clickWishlistButton();
     }
 
-    public void login(User user){
+    public void login(User user) {
         headerMenu.hoverMyAccountButton();
         headerMenu.clickLoginButton();
 
@@ -111,17 +120,22 @@ public class AbstractPage extends AbstractPageComposite {
         userDataForm.clickSignInButton();
     }
 
-    public void goToAccountPage(){
+    public void goToAccountPage() {
         headerMenu.hoverMyAccountButton();
         headerMenu.clickUserDetailsButton();
     }
 
-    public void logout(){
+    public void clickCheckoutNowButton() {
+        headerMenu.hoverCartButton();
+        checkoutNowPopUpButton.click();
+    }
+
+    public void logout() {
         headerMenu.hoverMyAccountButton();
         headerMenu.clickLogoutButton();
     }
 
-    public void signUp(User user){
+    public void signUp(User user) {
         headerMenu.hoverMyAccountButton();
         headerMenu.clickRegisterButton();
 
@@ -134,5 +148,10 @@ public class AbstractPage extends AbstractPageComposite {
         userDataForm.fillPhoneNumber(user.getPhoneNumber());
 
         userDataForm.clickSignUpButton();
+    }
+
+    public void checkoutAsGuest(String guestEmail) {
+        guestEmailInput.sendKeys(guestEmail);
+        guestCheckoutButton.click();
     }
 }

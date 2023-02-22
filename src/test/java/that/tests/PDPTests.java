@@ -7,6 +7,7 @@ import that.composites.ShoppingCartProduct;
 import that.composites.WishlistProduct;
 import that.entities.Product;
 import that.pages.CartPage;
+import that.pages.CheckoutPage;
 import that.pages.ProductDetailsPage;
 import that.pages.WishlistPage;
 
@@ -17,6 +18,10 @@ import java.util.stream.Collectors;
 import static com.codeborne.selenide.Selenide.page;
 import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
 import static org.assertj.core.api.Assertions.assertThat;
+import static that.entities.BankCard.TEST_BANK_CARD;
+import static that.entities.DeliveryAddress.TEST_ADDRESS;
+import static that.entities.User.LOGIN_TEST_USER;
+import static that.entities.User.TEST_USER;
 import static that.test_data.Categories.FilterOptions.*;
 import static that.test_data.Categories.SortOptions.RECOMMENDED;
 import static that.test_data.PageTitlesAndBreadCrumbs.*;
@@ -253,6 +258,56 @@ public class PDPTests extends AbstractBaseTest {
     @Test(groups = {"pdpTests"})
     public void defaultSortingOptionTest() {
         assertThat(womenShoesPLPage.getSelectedOption()).isEqualTo(RECOMMENDED.getOption());
+    }
+
+    /**
+     * MAF_12: Verify shopping user operation as Guest
+     */
+    @Test(groups = {"pdpTests"})
+    public void shopAsGuestTest() {
+        CategoryProduct firstProduct = womenShoesPLPage.getProducts().get(0);
+        firstProduct.clickProduct();
+
+        ProductDetailsPage firstProductDetailsPage = page(ProductDetailsPage.class);
+        firstProductDetailsPage.clickAddToCartButton();
+        firstProductDetailsPage.clickCheckoutNowButton();
+        firstProductDetailsPage.checkoutAsGuest(TEST_USER.getEmail());
+
+        CheckoutPage checkoutPage = page(CheckoutPage.class);
+        checkoutPage.fillUserForm(TEST_USER);
+        checkoutPage.fillDeliveryAddress(TEST_ADDRESS);
+        checkoutPage.clickContinueToPaymentButton();
+
+        checkoutPage.fillPaymentInfo(TEST_BANK_CARD);
+
+        assertThat(checkoutPage.getOrderConfirmationText())
+                .contains("Order number:")
+                .contains(TEST_USER.getEmail());
+    }
+
+    /**
+     * MAF_13: Verify shopping user operation as Registered user
+     */
+    @Test(groups = {"pdpTests"})
+    public void shopAsRegisteredUserTest() {
+        womenShoesPLPage.login(LOGIN_TEST_USER);
+
+        CategoryProduct firstProduct = womenShoesPLPage.getProducts().get(0);
+        firstProduct.clickProduct();
+
+        ProductDetailsPage firstProductDetailsPage = page(ProductDetailsPage.class);
+        firstProductDetailsPage.clickAddToCartButton();
+        firstProductDetailsPage.clickCheckoutNowButton();
+
+        CheckoutPage checkoutPage = page(CheckoutPage.class);
+        checkoutPage.fillDeliveryAddress(TEST_ADDRESS);
+        checkoutPage.clickContinueToPaymentButton();
+
+        checkoutPage.fillPaymentInfo(TEST_BANK_CARD);
+
+        assertThat(checkoutPage.getOrderConfirmationText())
+                .contains("Order number:")
+                .contains(LOGIN_TEST_USER.getEmail());
     }
 }
 

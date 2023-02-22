@@ -1,18 +1,16 @@
 package that.entities;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 import java.util.UUID;
 
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
 @RequiredArgsConstructor
 public class User {
     public static User LOGIN_TEST_USER = new User("testuser@testuser.com", "UserTest1!");
-    public static User SIGN_UP_TEST_USER = new User(String.format("%s@testuser.com", UUID.randomUUID()),
+    public static User TEST_USER = new User(String.format("%s@testuser.com", UUID.randomUUID()),
             "UserTest1!", "Mr", "User", "Test", "UNITED ARAB EMIRATES",
             "2000", "JANUARY", "1", "501234567");
     @NonNull

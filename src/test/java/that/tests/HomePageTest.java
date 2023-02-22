@@ -9,12 +9,12 @@ import java.util.List;
 
 import static com.codeborne.selenide.Selenide.page;
 import static org.assertj.core.api.Assertions.assertThat;
+import static that.entities.User.LOGIN_TEST_USER;
+import static that.entities.User.TEST_USER;
 import static that.test_data.Categories.AccountPageSection.*;
 import static that.test_data.Categories.L1Categories.WOMEN;
 import static that.test_data.Categories.L2Categories.SHOES;
 import static that.test_data.PageTitlesAndBreadCrumbs.*;
-import static that.entities.User.LOGIN_TEST_USER;
-import static that.entities.User.SIGN_UP_TEST_USER;
 
 public class HomePageTest extends AbstractBaseTest {
     /**
@@ -96,7 +96,7 @@ public class HomePageTest extends AbstractBaseTest {
      * MAF_14: Login, go to Account page, verify main Account page elements are displayed
      */
     @Test(groups = {"homePageTests"})
-    public void accountPageDetailsTest(){
+    public void accountPageDetailsTest() {
         String[] yourAccountSubsections = new String[]{
                 COMPLETE_YOUR_DETAILS.getSection(),
                 YOUR_WISHLIST.getSection(),
@@ -106,16 +106,15 @@ public class HomePageTest extends AbstractBaseTest {
         homePage.goToAccountPage();
         AccountPage accountPage = page(AccountPage.class);
 
-        for (String section : accountPage.getSectionNames()){
+        for (String section : accountPage.getSectionNames()) {
             accountPage.clickSection(section);
 
-            if (section.equals(YOUR_ACCOUNT.getSection())){
+            if (section.equals(YOUR_ACCOUNT.getSection())) {
                 accountPage.clickSection(YOUR_ACCOUNT.getSection());
                 assertThat(accountPage.isSectionHeadersContains(yourAccountSubsections))
                         .as("Section headers should contain")
                         .isTrue();
-            }
-            else{
+            } else {
                 assertThat(accountPage.isSectionHeadersContains(section))
                         .as("Section headers should contain %s", section)
                         .isTrue();
@@ -128,6 +127,6 @@ public class HomePageTest extends AbstractBaseTest {
      */
     @Test(groups = {"homePageTests"})
     public void signInSignUpTest() {
-        homePage.signUp(SIGN_UP_TEST_USER);
+        homePage.signUp(TEST_USER);
     }
 }

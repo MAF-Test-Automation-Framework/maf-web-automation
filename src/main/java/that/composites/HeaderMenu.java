@@ -4,7 +4,6 @@ import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
 public class HeaderMenu extends AbstractPageComposite {
@@ -26,7 +25,7 @@ public class HeaderMenu extends AbstractPageComposite {
     @FindBy(css = ".HeaderSearchBox .tab-icon")
     private SelenideElement searchButton;
 
-    @FindBy(className = "myAccount-Component")
+    @FindBy(css = ".myAccount-Component")
     private SelenideElement myAccountButton;
 
     @FindBy(css = ".wishList-Component .tab-icon")
@@ -53,20 +52,24 @@ public class HeaderMenu extends AbstractPageComposite {
     }
 
     public Boolean isLogoClickable() {
-        logo.shouldBe(Condition.enabled);
+        logo.shouldBe(Condition.enabled, Condition.visible);
         return true;
     }
 
     public Boolean areTopHeaderItemsClickable() {
-        l1MenuCategories.shouldBe(CollectionCondition.allMatch("All elements should be clickable", WebElement::isEnabled));
+        l1MenuCategories.shouldBe(CollectionCondition.allMatch
+                (
+                        "All elements should be clickable",
+                        element -> element.isEnabled() && element.isDisplayed()
+                ));
         return true;
     }
 
     public Boolean areRightHeaderItemsClickable() {
-        searchButton.shouldBe(Condition.enabled);
-        wishlistButton.shouldBe(Condition.enabled);
-        myAccountButton.shouldBe(Condition.enabled);
-        cartButton.shouldBe(Condition.enabled);
+        searchButton.shouldBe(Condition.enabled, Condition.visible);
+        wishlistButton.shouldBe(Condition.enabled, Condition.visible);
+        myAccountButton.shouldBe(Condition.enabled, Condition.visible);
+        cartButton.shouldBe(Condition.enabled, Condition.visible);
         return true;
     }
 
@@ -102,21 +105,24 @@ public class HeaderMenu extends AbstractPageComposite {
         wishlistButton.click();
     }
 
-    public void hoverMyAccountButton(){
-        myAccountButton.shouldBe(Condition.visible).hover();
+    public void hoverMyAccountButton() {
+        areRightHeaderItemsClickable();
+        myAccountButton.hover();
     }
-    public void clickUserDetailsButton(){
+
+    public void clickUserDetailsButton() {
         userDetailsButton.click();
     }
 
-    public void clickLoginButton(){
-        loginButton.click();
+    public void clickLoginButton() {
+        loginButton.shouldBe(Condition.enabled).click();
     }
 
     public void clickLogoutButton() {
         logoutButton.click();
     }
-    public void clickRegisterButton(){
+
+    public void clickRegisterButton() {
         registerNowButton.click();
     }
 }
