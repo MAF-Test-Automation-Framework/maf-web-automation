@@ -39,6 +39,8 @@ public class ProductDetailsPage extends AbstractPage {
     @FindBy(tagName = "cx-add-to-wishlist")
     private SelenideElement addToWishlistButton;
 
+    @FindBy(className = "stock-indicator")
+    private SelenideElement stockIndicator;
 
     public Boolean isPDTabContentVisible(int tabIndex) {
         return detailsSectionTabsContent.get(tabIndex).isDisplayed();
@@ -75,4 +77,7 @@ public class ProductDetailsPage extends AbstractPage {
         return new Product(brand, productName, defaultImage, price);
     }
 
+    public String getStockIndicatorText(){
+        return stockIndicator.getText();
+    }
 }

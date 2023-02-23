@@ -37,6 +37,7 @@ public class ProductsListPage extends AbstractPage {
                 .shouldHave(CollectionCondition.sizeGreaterThan(0))
                 .stream()
                 .map(CategoryProduct::new)
+                .filter(product -> !product.isOutOfStock())
                 .collect(Collectors.toList());
     }
 

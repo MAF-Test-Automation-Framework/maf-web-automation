@@ -61,7 +61,17 @@ public class CheckoutPage extends AbstractPage {
     @FindBy(className = "order-confirmation-thanks")
     private SelenideElement orderConfirmation;
 
-    public void fillDeliveryAddress(DeliveryAddress deliveryAddress) {
+    public void fillFormForGuest(DeliveryAddress deliveryAddress, User user){
+        fillUserForm(user);
+        fillFormForRegisteredUser(deliveryAddress);
+    }
+
+    public void fillFormForRegisteredUser(DeliveryAddress deliveryAddress){
+        fillDeliveryAddress(deliveryAddress);
+        clickContinueToPaymentButton();
+    }
+
+    private void fillDeliveryAddress(DeliveryAddress deliveryAddress) {
         countryDropdown.click();
         ElementsCollection countryOptions = countryDropdown.findAll(dropdownOptionsLocator);
         getElementByText(countryOptions, deliveryAddress.getCountry()).click();
@@ -80,13 +90,13 @@ public class CheckoutPage extends AbstractPage {
         floorNumberInput.sendKeys(deliveryAddress.getFloor());
     }
 
-    public void fillUserForm(User user) {
+    private void fillUserForm(User user) {
         firstNameInput.sendKeys(user.getFirstName());
         lastNameInput.sendKeys(user.getLastName());
         phoneNumberInput.sendKeys(user.getPhoneNumber());
     }
 
-    public void clickContinueToPaymentButton() {
+    private void clickContinueToPaymentButton() {
         continueToPaymentButton.shouldBe(Condition.enabled).click();
     }
 

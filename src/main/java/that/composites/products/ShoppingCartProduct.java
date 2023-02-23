@@ -42,6 +42,12 @@ public class ShoppingCartProduct extends AbstractPageComposite {
         productQuantitySelect.selectByValue(maxProductCount.toString());
     }
 
+    public void selectProductCount(Integer productCount){
+        Select productQuantitySelect =
+                new Select(root.find(quantitySelectLocator));
+        productQuantitySelect.selectByValue(productCount.toString());
+    }
+
     public void removeFromCart() {
         root.find(removeFromCartButtonLocator).click();
     }
