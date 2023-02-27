@@ -1,17 +1,25 @@
 package that.pages.users_pages;
 
+import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.By;
 import org.openqa.selenium.support.FindBy;
+import that.composites.products.CheckoutSummaryProduct;
 import that.entities.BankCard;
 import that.entities.DeliveryAddress;
 import that.entities.User;
 import that.pages.AbstractPage;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class CheckoutPage extends AbstractPage {
     private By dropdownOptionsLocator = By.className("ng-option");
+
+    @FindBy(className = "checkout-summary-product")
+    private ElementsCollection productsList;
 
     @FindBy(css = "[name='firstName']")
     private SelenideElement firstNameInput;
@@ -110,5 +118,13 @@ public class CheckoutPage extends AbstractPage {
 
     public String getOrderConfirmationText() {
         return orderConfirmation.getText();
+    }
+
+    public List<CheckoutSummaryProduct> getProducts() {
+        return productsList
+                .shouldHave(CollectionCondition.sizeGreaterThan(0))
+                .stream()
+                .map(CheckoutSummaryProduct::new)
+                .collect(Collectors.toList());
     }
 }

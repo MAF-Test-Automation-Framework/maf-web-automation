@@ -39,6 +39,9 @@ public class AbstractPage extends AbstractPageComposite {
     @FindBy(xpath = "//*[contains(text(), 'Checkout Now')]")
     private SelenideElement checkoutNowPopUpButton;
 
+    @FindBy(xpath = "//cx-cart-modal-login//button[contains(text(), 'Login')]")
+    private SelenideElement checkoutLoginButton;
+
     @FindBy(className = "btn-guest-email")
     private SelenideElement guestCheckoutButton;
 
@@ -114,7 +117,15 @@ public class AbstractPage extends AbstractPageComposite {
     public void login(User user) {
         headerMenu.hoverMyAccountButton();
         headerMenu.clickLoginButton();
+        fillLoginForm(user);
+    }
 
+    public void checkoutAndLogin(User user){
+        checkoutLoginButton.click();
+        fillLoginForm(user);
+    }
+
+    public void fillLoginForm(User user){
         userDataForm.fillEmail(user.getEmail());
         userDataForm.fillPassword(user.getPassword());
         userDataForm.clickSignInButton();

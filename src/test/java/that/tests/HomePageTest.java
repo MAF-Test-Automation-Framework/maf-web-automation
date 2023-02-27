@@ -1,7 +1,9 @@
 package that.tests;
 
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import that.composites.products.CategoryProduct;
+import that.pages.HomePage;
 import that.pages.users_pages.AccountPage;
 import that.pages.products_pages.ProductsListPage;
 
@@ -10,18 +12,22 @@ import java.util.List;
 import static com.codeborne.selenide.Selenide.page;
 import static org.assertj.core.api.Assertions.assertThat;
 import static that.entities.User.LOGIN_TEST_USER;
-import static that.entities.User.TEST_USER;
 import static that.test_data.Categories.AccountPageSection.*;
 import static that.test_data.Categories.L1Categories.WOMEN;
 import static that.test_data.Categories.L2Categories.SHOES;
 import static that.test_data.PageTitlesAndBreadCrumbs.*;
 
 public class HomePageTest extends AbstractBaseTest {
+    @BeforeMethod
+    public void homePageSetUp() {
+        homePage = openPage("/", HomePage.class);
+    }
+
     /**
      * MAF_01: Go to Home page, verify header items are clickable, banners are visible, loaded page is correct
      */
-    @Test(groups = {"homePageTests"})
-    public void mainElementsExistenceTest() {
+    @Test
+    public void homePageTest() {
         assertThat(homePage.areAllHeaderMenuItemsClickableOrVisible())
                 .as("Header menu items should be clickable")
                 .isTrue();
@@ -36,7 +42,7 @@ public class HomePageTest extends AbstractBaseTest {
     /**
      * MAF_06: Click any l1 category and verify correct page are displayed
      */
-    @Test(groups = {"homePageTests"})
+    @Test
     public void l1CategoryTest() {
         homePage.clickHeaderL1Category(String.valueOf(WOMEN));
 
@@ -48,7 +54,7 @@ public class HomePageTest extends AbstractBaseTest {
     /**
      * MAF_07: Click any l2 category and verify correct page and breadcrumb are displayed
      */
-    @Test(groups = {"homePageTests"})
+    @Test
     public void l2CategoryTest() {
         homePage.clickHeaderL2Category(String.valueOf(WOMEN), String.valueOf(SHOES));
         String actualWomenShoesPageBreadCrumb = homePage.getBreadCrumbText();
@@ -62,7 +68,7 @@ public class HomePageTest extends AbstractBaseTest {
     /**
      * MAF_08: Click l3 Sandals category and verify correct page and breadcrumb are displayed
      */
-    @Test(groups = {"homePageTests"})
+    @Test
     public void l3CategoryTest() {
         homePage.clickHeaderSandalsL3Category();
         String actualWomenSandalsPageBreadCrumb = homePage.getBreadCrumbText();
@@ -76,7 +82,7 @@ public class HomePageTest extends AbstractBaseTest {
     /**
      * MAF_19: Search Dress from header search line, verify found products are dresses
      */
-    @Test(groups = {"homePageTests"})
+    @Test
     public void searchProductsTest() {
         String searchedKey = "Dress";
 
@@ -95,7 +101,7 @@ public class HomePageTest extends AbstractBaseTest {
     /**
      * MAF_14: Login, go to Account page, verify main Account page elements are displayed
      */
-    @Test(groups = {"homePageTests"})
+    @Test
     public void accountPageDetailsTest() {
         String[] yourAccountSubsections = new String[]{
                 COMPLETE_YOUR_DETAILS.getSection(),

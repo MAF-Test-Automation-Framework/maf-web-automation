@@ -35,7 +35,7 @@ public class HeaderMenu extends AbstractPageComposite {
     private SelenideElement cartButton;
 
     @FindBy(xpath = "//button[contains(text(), 'Login')]")
-    private SelenideElement loginButton;
+    private SelenideElement accountLoginButton;
 
     @FindBy(xpath = "//button[contains(text(), 'Logout')]")
     private SelenideElement logoutButton;
@@ -119,7 +119,7 @@ public class HeaderMenu extends AbstractPageComposite {
     }
 
     public void clickLoginButton() {
-        loginButton.shouldBe(Condition.enabled).click();
+        accountLoginButton.shouldBe(Condition.enabled).click();
     }
 
     public void clickLogoutButton() {
