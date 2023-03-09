@@ -1,6 +1,7 @@
 package that.tests;
 
 import org.testng.Assert;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import that.composites.products.CategoryProduct;
@@ -9,9 +10,13 @@ import that.composites.products.ShoppingCartProduct;
 import that.entities.Product;
 import that.pages.products_pages.ProductDetailsPage;
 import that.pages.products_pages.ProductsListPage;
+import that.pages.users_pages.AccountPage;
 import that.pages.users_pages.CartPage;
 import that.pages.users_pages.CheckoutPage;
+import that.pages.users_pages.OrdersPage;
+import utils.Utils;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,12 +27,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static that.entities.BankCard.TEST_BANK_CARD;
 import static that.entities.DeliveryAddress.TEST_ADDRESS;
 import static that.entities.User.LOGIN_TEST_USER;
-import static that.entities.User.TEST_USER;
+import static that.entities.User.SIGN_UP_TEST_USER;
+import static that.test_data.Categories.AccountPageSection.ORDERS;
 import static that.test_data.PageTitlesAndBreadCrumbs.CART_PAGE_TITLE;
-import static that.test_data.PageTitlesAndBreadCrumbs.WOMEN_SHOES_PLP_TITLE;
 import static utils.Utils.getStringValueOfPrice;
 
 public class CartTest extends AbstractBaseTest{
+
+    File downloadedFile;
 
     @BeforeMethod(onlyForGroups = {"cartTestsForGuest"})
     public void cartSetUpForGuest() {
@@ -42,30 +49,17 @@ public class CartTest extends AbstractBaseTest{
         addProductFromPlpToCart(0);
     }
 
+    @AfterMethod(onlyForGroups = "downloadReceiptTest")
+    public void downloadReceiptTearDown(){
+        downloadedFile.delete();
+    }
+
     public void addProductFromPlpToCart(int indexOfProduct){
         CategoryProduct firstProduct = womenShoesPLPage.getProducts().get(indexOfProduct);
         firstProduct.clickProduct();
 
         productDetailsPage = page(ProductDetailsPage.class);
         productDetailsPage.clickAddToCartButton();
-    }
-
-    /**
-     * MAF_11: Sign in, verify signed-in username, login, verify logged in username
-     */
-    @Test(groups = {"homePageTests"})
-    public void signInSignUpTest() {
-        homePage.signUp(TEST_USER);
-        assertThat(homePage.getHeaderAccountPopUpUserDetailsText())
-                .contains(TEST_USER.getFirstName())
-                .contains(TEST_USER.getLastName());
-
-        homePage.logout();
-
-        homePage.login(TEST_USER);
-        assertThat(homePage.getHeaderAccountPopUpUserDetailsText())
-                .contains(TEST_USER.getFirstName())
-                .contains(TEST_USER.getLastName());
     }
 
     /**
@@ -129,21 +123,21 @@ public class CartTest extends AbstractBaseTest{
     @Test(groups = {"cartTestsForGuest"})
     public void shopAsGuestTest() {
         productDetailsPage.clickCheckoutNowButton();
-        productDetailsPage.checkoutAsGuest(TEST_USER.getEmail());
+        productDetailsPage.checkoutAsGuest(SIGN_UP_TEST_USER.getEmail());
 
         CheckoutPage checkoutPage = page(CheckoutPage.class);
-        checkoutPage.fillFormForGuest(TEST_ADDRESS, TEST_USER);
+        checkoutPage.fillFormForGuest(TEST_ADDRESS, SIGN_UP_TEST_USER);
         checkoutPage.fillPaymentInfo(TEST_BANK_CARD);
 
         assertThat(checkoutPage.getOrderConfirmationText())
                 .contains("Order number:")
-                .contains(TEST_USER.getEmail());
+                .contains(SIGN_UP_TEST_USER.getEmail());
     }
 
     /**
      * MAF_13: Verify shopping user operation as Registered user
      */
-    @Test(groups = {"cartTestsForRegisteredUser"}, dependsOnMethods = {"signInSignUpTest"})
+    @Test(groups = {"cartTestsForRegisteredUser"})
     public void shopAsRegisteredUserTest() {
         productDetailsPage.clickCheckoutNowButton();
 
@@ -153,7 +147,7 @@ public class CartTest extends AbstractBaseTest{
 
         assertThat(checkoutPage.getOrderConfirmationText())
                 .contains("Order number:")
-                .contains(TEST_USER.getEmail());
+                .contains(LOGIN_TEST_USER.getEmail());
     }
 
     /**
@@ -188,15 +182,15 @@ public class CartTest extends AbstractBaseTest{
                 .isTrue();
 
         cartPage.clickCheckoutButton();
-        firstProductDetailsPage.checkoutAsGuest(TEST_USER.getEmail());
+        firstProductDetailsPage.checkoutAsGuest(SIGN_UP_TEST_USER.getEmail());
 
         CheckoutPage checkoutPage = page(CheckoutPage.class);
-        checkoutPage.fillFormForGuest(TEST_ADDRESS, TEST_USER);
+        checkoutPage.fillFormForGuest(TEST_ADDRESS, SIGN_UP_TEST_USER);
         checkoutPage.fillPaymentInfo(TEST_BANK_CARD);
 
         assertThat(checkoutPage.getOrderConfirmationText())
                 .contains("Order number:")
-                .contains(TEST_USER.getEmail());
+                .contains(SIGN_UP_TEST_USER.getEmail());
     }
 
     /**
@@ -233,6 +227,29 @@ public class CartTest extends AbstractBaseTest{
         checkoutPage.fillPaymentInfo(TEST_BANK_CARD);
         assertThat(checkoutPage.getOrderConfirmationText())
                 .contains("Order number:")
-                .contains(TEST_USER.getEmail());
+                .contains(SIGN_UP_TEST_USER.getEmail());
+    }
+
+    /**
+     * MAF_28: Log in, go to orders page, download invoice for order,
+     * verify receipt is downloaded and its content
+     */
+    @Test(groups = {"plpTests", "downloadReceiptTest"}, dependsOnMethods = "shopAsRegisteredUserTest")
+    public void downloadReceiptTest(){
+        womenShoesPLPage.login(LOGIN_TEST_USER);
+        womenShoesPLPage.clickUserDetailsHeaderAccountPopUpBtn();
+        AccountPage accountPage = page(AccountPage.class);
+        accountPage.clickSection(ORDERS.getSection());
+        OrdersPage ordersPage = page(OrdersPage.class);
+        File downloadedFile = accountPage.downloadInvoiceForOrder(0);
+        assertThat(downloadedFile.getName()).isEqualTo("receipt.pdf");
+
+        String content = Utils.readPdfFile(downloadedFile);
+        assertThat(content).contains(String.format("Invoice Number %s", ordersPage.getOrderNumberText()));
+        assertThat(content).contains(String.format("Name %s %s", LOGIN_TEST_USER.getFirstName(), LOGIN_TEST_USER.getLastName()));
+        assertThat(content).contains(String.format("Email %s", LOGIN_TEST_USER.getEmail()));
+        assertThat(content).contains(String.format("Phone No. %s%s", LOGIN_TEST_USER.getPhoneCountryCode(), LOGIN_TEST_USER.getPhoneNumber()));
+        ordersPage.getProductNamesText().forEach(productName -> assertThat(content).containsIgnoringNewLines(productName));
+        assertThat(content).contains(String.format("Total (Incl. VAT) %s", ordersPage.getTotalPriceText()));
     }
 }

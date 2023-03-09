@@ -39,7 +39,8 @@ public class Categories {
         YOUR_ACCOUNT("YOUR ACCOUNT"),
         COMPLETE_YOUR_DETAILS("COMPLETE YOUR DETAILS"),
         YOUR_WISHLIST("YOUR WISHLIST"),
-        ACCOUNT_SIGN_OUT("ACCOUNT SIGN OUT");
+        ACCOUNT_SIGN_OUT("ACCOUNT SIGN OUT"),
+        ORDERS("ORDERS");
         final String section;
         }
 }

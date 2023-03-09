@@ -156,6 +156,7 @@ public class AbstractPage extends AbstractPageComposite {
         userDataForm.fillEmail(user.getEmail());
         userDataForm.fillPassword(user.getPassword());
         userDataForm.fillName(user.getFirstName(), user.getLastName());
+        userDataForm.selectCountryCode(user.getPhoneCountryCode());
         userDataForm.fillPhoneNumber(user.getPhoneNumber());
 
         userDataForm.clickSignUpButton();

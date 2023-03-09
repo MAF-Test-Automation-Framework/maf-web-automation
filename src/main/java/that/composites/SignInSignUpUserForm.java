@@ -44,6 +44,12 @@ public class SignInSignUpUserForm extends AbstractPageComposite {
     @FindBy(css = "[for*='titles']")
     private ElementsCollection titleRadiobuttons;
 
+    @FindBy(xpath = "//*[@id='countryCode']/following-sibling::*[3]")
+    private SelenideElement countryCodeDropdown;
+
+    @FindBy(xpath = "//*[contains(@class, 'nationality-bar')]/../*[2]")
+    private ElementsCollection countryCodeOptions;
+
     @FindBy(xpath = "//button[contains(text(), 'Sign in')]")
     private SelenideElement signInButton;
 
@@ -99,5 +105,11 @@ public class SignInSignUpUserForm extends AbstractPageComposite {
 
     public void clickEmailCheckConfirmationBtn(){
         emailCheckConfirmationButton.click();
+    }
+
+    // country code or country name can be passed here
+    public void selectCountryCode(String countryCode){
+        countryCodeDropdown.click();
+        getElementByText(countryCodeOptions, countryCode).click();
     }
 }

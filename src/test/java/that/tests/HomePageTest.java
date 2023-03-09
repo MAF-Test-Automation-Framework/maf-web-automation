@@ -12,6 +12,7 @@ import java.util.List;
 import static com.codeborne.selenide.Selenide.page;
 import static org.assertj.core.api.Assertions.assertThat;
 import static that.entities.User.LOGIN_TEST_USER;
+import static that.entities.User.SIGN_UP_TEST_USER;
 import static that.test_data.Categories.AccountPageSection.*;
 import static that.test_data.Categories.L1Categories.WOMEN;
 import static that.test_data.Categories.L2Categories.SHOES;
@@ -126,5 +127,23 @@ public class HomePageTest extends AbstractBaseTest {
                         .isTrue();
             }
         }
+    }
+
+    /**
+     * MAF_11: Sign in, verify signed-in username, login, verify logged in username
+     */
+    @Test
+    public void signInSignUpTest() {
+        homePage.signUp(SIGN_UP_TEST_USER);
+        assertThat(homePage.getHeaderAccountPopUpUserDetailsText())
+                .contains(SIGN_UP_TEST_USER.getFirstName())
+                .contains(SIGN_UP_TEST_USER.getLastName());
+
+        homePage.logout();
+
+        homePage.login(SIGN_UP_TEST_USER);
+        assertThat(homePage.getHeaderAccountPopUpUserDetailsText())
+                .contains(SIGN_UP_TEST_USER.getFirstName())
+                .contains(SIGN_UP_TEST_USER.getLastName());
     }
 }

@@ -13,7 +13,9 @@ import that.pages.products_pages.ProductsListPage;
 
 import java.util.Comparator;
 
-import static com.codeborne.selenide.Selenide.*;
+import static com.codeborne.selenide.FileDownloadMode.FOLDER;
+import static com.codeborne.selenide.Selenide.closeWebDriver;
+import static com.codeborne.selenide.Selenide.open;
 import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
 import static that.test_data.Categories.SortOptions.HIGHEST_PRICE;
 import static that.test_data.Categories.SortOptions.LOWEST_PRICE;
@@ -31,6 +33,7 @@ public class AbstractBaseTest {
         Configuration.baseUrl = "https://that.c1xjddw2-majidalfu1-p2-public.model-t.cc.commerce.ondemand.com/en-ae";
         Configuration.headless = false;
         Configuration.timeout = 40000;
+        Configuration.fileDownload = FOLDER;
     }
 
     @BeforeMethod(onlyForGroups = {"plpTests"})
