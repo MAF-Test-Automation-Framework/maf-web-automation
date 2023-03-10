@@ -21,6 +21,15 @@ public class CartPage extends AbstractPage {
     @FindBy(className = "cx-summary-total")
     private SelenideElement totalPrice;
 
+    @FindBy(css = "main .input-coupon-code")
+    private SelenideElement promoCodeInput;
+
+    @FindBy(css = "main .apply-coupon-button")
+    private SelenideElement applyPromoCodeButton;
+
+    @FindBy(css = "main .apply-coupon-error")
+    private SelenideElement invalidPromoCodeText;
+
     public List<ShoppingCartProduct> getProducts() {
         return productsList
                 .shouldHave(CollectionCondition.sizeGreaterThan(0))
@@ -40,6 +49,20 @@ public class CartPage extends AbstractPage {
 
     public Boolean isTotalPrice(String expectedTotalPrice){
         totalPrice.shouldBe(Condition.partialText(expectedTotalPrice));
+        return true;
+    }
+
+    public String getTotalPrice(){
+        return totalPrice.getText();
+    }
+
+    public void applyPromoCode(String promoCode){
+        promoCodeInput.shouldHave(Condition.empty).sendKeys(promoCode);
+        applyPromoCodeButton.click();
+    }
+
+    public Boolean isInvalidPromoCodeTextVisible(){
+        invalidPromoCodeText.shouldBe(Condition.visible);
         return true;
     }
 }

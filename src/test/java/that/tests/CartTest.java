@@ -35,6 +35,8 @@ import static utils.Utils.getStringValueOfPrice;
 public class CartTest extends AbstractBaseTest{
 
     File downloadedFile;
+    final static String INVALID_PROMO_CODE = "INVALID";
+    final static String VALID_PROMO_CODE = "THATAUTO";
 
     @BeforeMethod(onlyForGroups = {"cartTestsForGuest"})
     public void cartSetUpForGuest() {
@@ -251,5 +253,38 @@ public class CartTest extends AbstractBaseTest{
         assertThat(content).contains(String.format("Phone No. %s%s", LOGIN_TEST_USER.getPhoneCountryCode(), LOGIN_TEST_USER.getPhoneNumber()));
         ordersPage.getProductNamesText().forEach(productName -> assertThat(content).containsIgnoringNewLines(productName));
         assertThat(content).contains(String.format("Total (Incl. VAT) %s", ordersPage.getTotalPriceText()));
+    }
+
+    //TODO: delete product from bag and promocode in after method
+    /**
+     * MAF_22: Add product to cart, go to cart, enter invalid promo code,
+     * verify invalid promo code message is displayed
+     */
+    @Test(groups = {"cartTestsForRegisteredUser"})
+    public void useInvalidPromoCodeTest() {
+        productDetailsPage.clickGoToBagHeaderCartPopUpButton();
+
+        CartPage cartPage = page(CartPage.class);
+        cartPage.applyPromoCode(INVALID_PROMO_CODE);
+        assertThat(cartPage.isInvalidPromoCodeTextVisible())
+                .as("Invalid promo code text should be visible")
+                .isTrue();
+    }
+
+    /**
+     * MAF_22: Add product to cart, go to cart, enter THATAUTO valid promo code (50 AED discount)
+     * verify total price is reduced by 50 AED
+     */
+    @Test(groups = {"cartTestsForRegisteredUser"})
+    public void useValidPromoCodeTest() {
+        productDetailsPage.clickGoToBagHeaderCartPopUpButton();
+
+        CartPage cartPage = page(CartPage.class);
+        int priceWithoutPromoCodeDiscount = Utils.getIntegerValueOfPrice(cartPage.getTotalPrice());
+
+        cartPage.applyPromoCode(VALID_PROMO_CODE);
+        assertThat(cartPage.isTotalPrice(Utils.getStringValueOfPrice(priceWithoutPromoCodeDiscount - 50)))
+                .as("Total price should be less by 50 AED")
+                .isTrue();
     }
 }
