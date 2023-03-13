@@ -119,5 +119,28 @@ public class ProductPagesTest extends AbstractBaseTest {
     public void defaultSortingOptionTest() {
         assertThat(womenShoesPLPage.getSelectedOption()).isEqualTo(RECOMMENDED.getOption());
     }
+
+    /**
+     * MAF_26: Click product that can be in different colors, change its color,
+     * verify imageLink is changed, other product definition is the same
+     */
+    @Test(groups = {"plpTests"})
+    public void switchColorTest(){
+        CategoryProduct differentColorsProduct = womenShoesPLPage
+                .getProducts()
+                .stream()
+                .filter(product -> product.getProductColorsNumber()>1)
+                .findFirst()
+                .get();
+        differentColorsProduct.clickProduct();
+        ProductDetailsPage productDetailsPage = page(ProductDetailsPage.class);
+        Product oneColorProduct = productDetailsPage.getProductInformation();
+        productDetailsPage.selectColor(1);
+        Product anotherColorProduct = productDetailsPage.getProductInformation();
+        assertThat(oneColorProduct).usingRecursiveComparison()
+                .ignoringFields("imageLink")
+                .isEqualTo(anotherColorProduct);
+        productDetailsPage.isImageLinkChanged(oneColorProduct.getImageLink());
+    }
 }
 

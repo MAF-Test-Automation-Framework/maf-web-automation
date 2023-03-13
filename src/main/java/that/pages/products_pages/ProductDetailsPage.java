@@ -3,12 +3,14 @@ package that.pages.products_pages;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
+import org.openqa.selenium.By;
 import org.openqa.selenium.support.FindBy;
 import that.entities.Product;
 import that.pages.AbstractPage;
 
 public class ProductDetailsPage extends AbstractPage {
     public static final String PRODUCT_ID_PREFIX = "Product ID:";
+    private By colorsDropdownOptions = By.cssSelector("app-product-variant-color-selector .ng-option");
     @FindBy(css = ".slider-item img")
     private ElementsCollection productImages;
 
@@ -41,6 +43,9 @@ public class ProductDetailsPage extends AbstractPage {
 
     @FindBy(className = "stock-indicator")
     private SelenideElement stockIndicator;
+
+    @FindBy(tagName = "app-product-variant-color-selector")
+    private SelenideElement colorsDropdown;
 
     public Boolean isPDTabContentVisible(int tabIndex) {
         return detailsSectionTabsContent.get(tabIndex).isDisplayed();
@@ -79,5 +84,15 @@ public class ProductDetailsPage extends AbstractPage {
 
     public String getStockIndicatorText(){
         return stockIndicator.getText();
+    }
+
+    public void selectColor(int index){
+        colorsDropdown.click();
+        colorsDropdown.findAll(colorsDropdownOptions).get(index).click();
+    }
+
+    public Boolean isImageLinkChanged(String previousImageLink){
+        productImages.get(0).shouldNotBe(Condition.attribute("src", previousImageLink));
+        return true;
     }
 }

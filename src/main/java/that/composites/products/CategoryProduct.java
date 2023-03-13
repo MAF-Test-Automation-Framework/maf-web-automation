@@ -14,6 +14,7 @@ public class CategoryProduct extends AbstractPageComposite {
     private By priceLocator = By.className("price-box");
     private By wishlistButtonLocator = By.className("heart");
     private By saleTagLocator = By.className("tag-wrapper");
+    private By colorsLocator = By.cssSelector(".images-container img");
 //    private By priceInfoLocator = By.className("price-wrap");
 
     public CategoryProduct(SelenideElement root) {
@@ -34,5 +35,9 @@ public class CategoryProduct extends AbstractPageComposite {
 
     public void addToWishlist() {
         root.find(wishlistButtonLocator).hover().click();
+    }
+
+    public int getProductColorsNumber(){
+        return root.findAll(colorsLocator).size();
     }
 }
