@@ -24,10 +24,10 @@ import java.util.stream.Collectors;
 import static com.codeborne.selenide.Selenide.open;
 import static com.codeborne.selenide.Selenide.page;
 import static org.assertj.core.api.Assertions.assertThat;
+import static that.entities.BankCard.TABBY_TEST_BANK_CARD;
 import static that.entities.BankCard.TEST_BANK_CARD;
 import static that.entities.DeliveryAddress.TEST_ADDRESS;
-import static that.entities.User.LOGIN_TEST_USER;
-import static that.entities.User.SIGN_UP_TEST_USER;
+import static that.entities.User.*;
 import static that.test_data.Categories.AccountPageSection.ORDERS;
 import static that.test_data.PageTitlesAndBreadCrumbs.CART_PAGE_TITLE;
 import static utils.Utils.getStringValueOfPrice;
@@ -120,7 +120,7 @@ public class CartTest extends AbstractBaseTest{
     }
 
     /**
-     * MAF_12: Verify shopping user operation as Guest
+     * MAF_12: Verify shopping user operation as Guest with bank card payment method
      */
     @Test(groups = {"cartTestsForGuest"})
     public void shopAsGuestTest() {
@@ -129,7 +129,7 @@ public class CartTest extends AbstractBaseTest{
 
         CheckoutPage checkoutPage = page(CheckoutPage.class);
         checkoutPage.fillFormForGuest(TEST_ADDRESS, SIGN_UP_TEST_USER);
-        checkoutPage.fillPaymentInfo(TEST_BANK_CARD);
+        checkoutPage.payWithBankCard(TEST_BANK_CARD);
 
         assertThat(checkoutPage.getOrderConfirmationText())
                 .contains("Order number:")
@@ -137,7 +137,7 @@ public class CartTest extends AbstractBaseTest{
     }
 
     /**
-     * MAF_13: Verify shopping user operation as Registered user
+     * MAF_13: Verify shopping user operation as Registered user with bank card payment method
      */
     @Test(groups = {"cartTestsForRegisteredUser"})
     public void shopAsRegisteredUserTest() {
@@ -145,7 +145,7 @@ public class CartTest extends AbstractBaseTest{
 
         CheckoutPage checkoutPage = page(CheckoutPage.class);
         checkoutPage.fillFormForRegisteredUser(TEST_ADDRESS);
-        checkoutPage.fillPaymentInfo(TEST_BANK_CARD);
+        checkoutPage.payWithBankCard(TEST_BANK_CARD);
 
         assertThat(checkoutPage.getOrderConfirmationText())
                 .contains("Order number:")
@@ -188,7 +188,7 @@ public class CartTest extends AbstractBaseTest{
 
         CheckoutPage checkoutPage = page(CheckoutPage.class);
         checkoutPage.fillFormForGuest(TEST_ADDRESS, SIGN_UP_TEST_USER);
-        checkoutPage.fillPaymentInfo(TEST_BANK_CARD);
+        checkoutPage.payWithBankCard(TEST_BANK_CARD);
 
         assertThat(checkoutPage.getOrderConfirmationText())
                 .contains("Order number:")
@@ -226,7 +226,7 @@ public class CartTest extends AbstractBaseTest{
                 .containsExactlyInAnyOrderElementsOf(expectedProducts);
 
         checkoutPage.fillFormForRegisteredUser(TEST_ADDRESS);
-        checkoutPage.fillPaymentInfo(TEST_BANK_CARD);
+        checkoutPage.payWithBankCard(TEST_BANK_CARD);
         assertThat(checkoutPage.getOrderConfirmationText())
                 .contains("Order number:")
                 .contains(SIGN_UP_TEST_USER.getEmail());
@@ -286,5 +286,22 @@ public class CartTest extends AbstractBaseTest{
         assertThat(cartPage.isTotalPrice(Utils.getStringValueOfPrice(priceWithoutPromoCodeDiscount - 50)))
                 .as("Total price should be less by 50 AED")
                 .isTrue();
+    }
+
+    /**
+     * MAF_23: Verify shopping as Registered user with tabby payment method
+     */
+    @Test(groups = {"cartTestsForRegisteredUser"})
+    public void shopWithTabbyTest() {
+        // Which products can be paid with Tabby? Can only one product be paid with this method?
+        productDetailsPage.clickCheckoutNowButton();
+
+        CheckoutPage checkoutPage = page(CheckoutPage.class);
+        checkoutPage.fillFormForRegisteredUser(TEST_ADDRESS);
+        checkoutPage.payWithTabby(TABBY_TEST_USER, TABBY_TEST_BANK_CARD);
+
+        assertThat(checkoutPage.getOrderConfirmationText())
+                .contains("Order number:")
+                .contains(LOGIN_TEST_USER.getEmail());
     }
 }

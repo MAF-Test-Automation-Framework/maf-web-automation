@@ -6,6 +6,7 @@ import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.By;
 import org.openqa.selenium.support.FindBy;
+import that.composites.PaymentMethods;
 import that.composites.products.CheckoutSummaryProduct;
 import that.entities.BankCard;
 import that.entities.DeliveryAddress;
@@ -15,8 +16,13 @@ import that.pages.AbstractPage;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.codeborne.selenide.Selenide.page;
+
 public class CheckoutPage extends AbstractPage {
+    public final static String BANK_CARD_PAYMENT_METHOD = "CARD PAYMENT";
+    public final static String TABBY_PAYMENT_METHOD = "INTEREST FREE INSTALLMENTS";
     private By dropdownOptionsLocator = By.className("ng-option");
+    private PaymentMethods paymentMethods;
 
     @FindBy(className = "checkout-summary-product")
     private ElementsCollection productsList;
@@ -54,20 +60,12 @@ public class CheckoutPage extends AbstractPage {
     @FindBy(className = "checkout-form-controls")
     private SelenideElement continueToPaymentButton;
 
-    @FindBy(id = "cardNumber")
-    private SelenideElement cardNumberInput;
-
-    @FindBy(id = "cardExpiry")
-    private SelenideElement cardExpDateInput;
-
-    @FindBy(id = "cardCvc")
-    private SelenideElement cardCvvInput;
-
-    @FindBy(className = "proceed-to-payment")
-    private SelenideElement proceedToPayment;
-
     @FindBy(className = "order-confirmation-thanks")
     private SelenideElement orderConfirmation;
+
+    public CheckoutPage() {
+        paymentMethods = page(PaymentMethods.class);
+    }
 
     public void fillFormForGuest(DeliveryAddress deliveryAddress, User user){
         fillUserForm(user);
@@ -92,28 +90,20 @@ public class CheckoutPage extends AbstractPage {
         ElementsCollection areaOptions = areaDropdown.findAll(dropdownOptionsLocator);
         getElementByText(areaOptions, deliveryAddress.getArea()).click();
 
-        streetNameInput.sendKeys(deliveryAddress.getStreet());
-        buildingInput.sendKeys(deliveryAddress.getBuilding());
-        flatNumberInput.sendKeys(deliveryAddress.getFlat());
-        floorNumberInput.sendKeys(deliveryAddress.getFloor());
+        streetNameInput.setValue(deliveryAddress.getStreet());
+        buildingInput.setValue(deliveryAddress.getBuilding());
+        flatNumberInput.setValue(deliveryAddress.getFlat());
+        floorNumberInput.setValue(deliveryAddress.getFloor());
     }
 
     private void fillUserForm(User user) {
-        firstNameInput.sendKeys(user.getFirstName());
-        lastNameInput.sendKeys(user.getLastName());
-        phoneNumberInput.sendKeys(user.getPhoneNumber());
+        firstNameInput.setValue(user.getFirstName());
+        lastNameInput.setValue(user.getLastName());
+        phoneNumberInput.setValue(user.getPhoneNumber());
     }
 
     private void clickContinueToPaymentButton() {
         continueToPaymentButton.shouldBe(Condition.enabled).click();
-    }
-
-    public void fillPaymentInfo(BankCard bankCard) {
-        cardNumberInput.sendKeys(bankCard.getCardNumber());
-        cardExpDateInput.sendKeys(bankCard.getExpirationDate());
-        cardCvvInput.sendKeys(bankCard.getCvv());
-
-        proceedToPayment.click();
     }
 
     public String getOrderConfirmationText() {
@@ -126,5 +116,18 @@ public class CheckoutPage extends AbstractPage {
                 .stream()
                 .map(CheckoutSummaryProduct::new)
                 .collect(Collectors.toList());
+    }
+
+    public void payWithBankCard(BankCard bankCard){
+        paymentMethods.clickPaymentMethodTab(BANK_CARD_PAYMENT_METHOD);
+        paymentMethods.payWithBankCard(bankCard);
+    }
+
+    public void payWithTabby(User user, BankCard bankCard){
+        paymentMethods.clickPaymentMethodTab(TABBY_PAYMENT_METHOD);
+        paymentMethods.clickTabbyButton();
+
+        paymentMethods.fillTabbyUserData(user);
+        paymentMethods.fillTabbyBankCardData(bankCard);
     }
 }

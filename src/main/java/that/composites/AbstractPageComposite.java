@@ -3,8 +3,10 @@ package that.composites;
 import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,5 +39,9 @@ public class AbstractPageComposite {
     protected ElementsCollection waitTillAllElementsAreVisible(ElementsCollection listOfItems){
         return listOfItems
                 .shouldBe(CollectionCondition.allMatch("All elements should be visible", WebElement::isDisplayed));
+    }
+
+    protected void clearInputValue(SelenideElement inputItem){
+        Arrays.stream(inputItem.getValue().split("")).forEach(letter -> inputItem.sendKeys(Keys.BACK_SPACE));
     }
 }

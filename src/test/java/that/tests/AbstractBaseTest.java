@@ -1,6 +1,7 @@
 package that.tests;
 
 import com.codeborne.selenide.Configuration;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeSuite;
@@ -28,9 +29,13 @@ public class AbstractBaseTest {
 
     @BeforeSuite
     public void driverSetUp() {
+        ChromeOptions chromeOptions = new ChromeOptions();
+        chromeOptions.addArguments("--remote-allow-origins=*");
         Configuration.browser = "chrome";
-//        Configuration.baseUrl = "https://www.thatconceptstore.com/en-ae";
+        Configuration.browserCapabilities = chromeOptions;
+        //        Configuration.baseUrl = "https://www.thatconceptstore.com/en-ae";
         Configuration.baseUrl = "https://that.c1xjddw2-majidalfu1-p2-public.model-t.cc.commerce.ondemand.com/en-ae";
+//        Configuration.baseUrl = "https://that.c1xjddw2-majidalfu1-s2-public.model-t.cc.commerce.ondemand.com/en-ae/";
         Configuration.headless = false;
         Configuration.timeout = 40000;
         Configuration.fileDownload = FOLDER;
