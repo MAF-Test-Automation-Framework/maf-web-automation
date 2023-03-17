@@ -29,7 +29,11 @@ public class WishlistProduct extends AbstractPageComposite {
     }
 
     public void clickMoveToBagButton() {
-        root.find(moveToBagButtonLocator).click();
+        root.hover().find(moveToBagButtonLocator).click();
+    }
+
+    public void removeFromWishlist(){
+        root.find(removeFromWishlistBtnLocator).hover().click();
     }
 
 }

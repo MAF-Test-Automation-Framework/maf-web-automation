@@ -40,13 +40,13 @@ public class CartTest extends AbstractBaseTest{
 
     @BeforeMethod(onlyForGroups = {"cartTestsForGuest"})
     public void cartSetUpForGuest() {
-        womenShoesPLPage = openPage(WOMEN_SHOES_PL_URL, ProductsListPage.class);
+        womenShoesPLPage = openBrowserOnPage(WOMEN_SHOES_PL_URL, ProductsListPage.class);
         addProductFromPlpToCart(0);
     }
 
     @BeforeMethod(onlyForGroups = {"cartTestsForRegisteredUser"})
     public void cartSetUpForRegisteredUser() {
-        womenShoesPLPage = openPage(WOMEN_SHOES_PL_URL, ProductsListPage.class);
+        womenShoesPLPage = openBrowserOnPage(WOMEN_SHOES_PL_URL, ProductsListPage.class);
         womenShoesPLPage.login(LOGIN_TEST_USER);
         addProductFromPlpToCart(0);
     }

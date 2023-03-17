@@ -40,7 +40,7 @@ public class ProductsListPage extends AbstractPage {
                 .collect(Collectors.toList());
     }
 
-    public List<CategoryProduct> getProductsMoreThanOrEqual(int numberOfProducts) {
+    public List<CategoryProduct> getMoreProducts(int numberOfProducts) {
         int productsListSize = productsList.shouldBe(CollectionCondition.sizeGreaterThan(0)).size();
         while (productsListSize < numberOfProducts) {
             productsList.get(productsListSize - 1).scrollIntoView(false);

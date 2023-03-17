@@ -24,7 +24,7 @@ import static that.test_data.PageTitlesAndBreadCrumbs.WOMEN_SHOES_BREADCRUMB;
 public class ProductPagesTest extends AbstractBaseTest {
     @BeforeMethod(onlyForGroups = {"pdpTests"})
     public void pdpSetUp() {
-        womenShoesPLPage = openPage(WOMEN_SHOES_PL_URL, ProductsListPage.class);
+        womenShoesPLPage = openBrowserOnPage(WOMEN_SHOES_PL_URL, ProductsListPage.class);
 
         CategoryProduct firstProduct = womenShoesPLPage.getProducts().get(0);
         firstProduct.clickProduct();
@@ -85,7 +85,7 @@ public class ProductPagesTest extends AbstractBaseTest {
         int twoPagesProductsCount = 40;
         womenShoesPLPage.sortProductsBy(sortOption);
 
-        List<CategoryProduct> productElements = womenShoesPLPage.getProductsMoreThanOrEqual(twoPagesProductsCount);
+        List<CategoryProduct> productElements = womenShoesPLPage.getMoreProducts(twoPagesProductsCount);
         List<Product> products = womenShoesPLPage.convertProductElementsToEntities(productElements);
         List<Product> sortedProducts = products
                 .stream()
@@ -103,7 +103,7 @@ public class ProductPagesTest extends AbstractBaseTest {
         womenShoesPLPage.filterProducts(BRAND.getOption(), JUIN_BRAND.getOption());
         int expectedFilteredProductsCount = womenShoesPLPage
                 .filterProducts(CATEGORY.getOption(), ON_SALE_CATEGORY.getOption());
-        List<CategoryProduct> allFilteredProducts = womenShoesPLPage.getProductsMoreThanOrEqual(expectedFilteredProductsCount);
+        List<CategoryProduct> allFilteredProducts = womenShoesPLPage.getMoreProducts(expectedFilteredProductsCount);
 
         assertThat(allFilteredProducts).hasSize(expectedFilteredProductsCount);
         assertThat(allFilteredProducts)

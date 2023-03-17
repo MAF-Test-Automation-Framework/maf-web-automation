@@ -43,7 +43,7 @@ public class AbstractBaseTest {
 
     @BeforeMethod(onlyForGroups = {"plpTests"})
     public void plpSetUp() {
-        womenShoesPLPage = openPage(WOMEN_SHOES_PL_URL, ProductsListPage.class);
+        womenShoesPLPage = openBrowserOnPage(WOMEN_SHOES_PL_URL, ProductsListPage.class);
     }
 
     @AfterMethod
@@ -61,7 +61,7 @@ public class AbstractBaseTest {
                 };
     }
 
-    protected <T extends AbstractPage> T openPage(String url, Class<T> pageObjectClass) {
+    protected <T extends AbstractPage> T openBrowserOnPage(String url, Class<T> pageObjectClass) {
         T page = open(url, pageObjectClass);
         getWebDriver().manage().window().maximize();
         page.clickCookieNotificationCloseButton();

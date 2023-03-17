@@ -21,7 +21,7 @@ import static that.test_data.PageTitlesAndBreadCrumbs.*;
 public class HomePageTest extends AbstractBaseTest {
     @BeforeMethod
     public void homePageSetUp() {
-        homePage = openPage("/", HomePage.class);
+        homePage = openBrowserOnPage("/", HomePage.class);
     }
 
     /**
