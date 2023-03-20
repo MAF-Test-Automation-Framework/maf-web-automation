@@ -37,6 +37,7 @@ public class CartTest extends AbstractBaseTest{
     File downloadedFile;
     final static String INVALID_PROMO_CODE = "INVALID";
     final static String VALID_PROMO_CODE = "THATAUTO";
+    final static String SHARE_POINTS_TO_REDEEM = "20";
 
     @BeforeMethod(onlyForGroups = {"cartTestsForGuest"})
     public void cartSetUpForGuest() {
@@ -303,5 +304,50 @@ public class CartTest extends AbstractBaseTest{
         assertThat(checkoutPage.getOrderConfirmationText())
                 .contains("Order number:")
                 .contains(LOGIN_TEST_USER.getEmail());
+    }
+
+    /**
+     * MAF_21: Sign in with user registered to Share Program, redeem 20 share points, verify discount is applied,
+     * Share points are displayed, continue to payment flow, verify it was purchased successfully
+     */
+    @Test(groups = {"cartTestsForRegisteredUser"})
+    public void redeemShareAmountTest(){
+        productDetailsPage.clickCheckoutNowButton();
+
+        CheckoutPage checkoutPage = page(CheckoutPage.class);
+        checkoutPage.fillFormForRegisteredUser(TEST_ADDRESS);
+        int discountTotalPrice = Utils.getIntegerValueOfPrice(checkoutPage.getTotalPrice()) - Integer.parseInt(SHARE_POINTS_TO_REDEEM)/10;
+
+        checkoutPage.redeemSharePoints(SHARE_POINTS_TO_REDEEM);
+        assertThat(checkoutPage.isTotalPrice(Utils.getStringValueOfPrice(discountTotalPrice))).isTrue();
+        assertThat(checkoutPage.getAppliedSharePoints()).contains(SHARE_POINTS_TO_REDEEM);
+
+        checkoutPage.payWithBankCard(TEST_BANK_CARD);
+        assertThat(checkoutPage.getOrderConfirmationText())
+                .contains("Order number:")
+                .contains(SIGN_UP_TEST_USER.getEmail());
+        //Check in orders?
+    }
+
+    /**
+     * MAF_21: Sign in with user registered to Share Program, redeem 20 share points, verify discount is applied,
+     * remove amount, verify there is no discount, Share points aren't displayed
+     */
+    @Test(groups = {"cartTestsForRegisteredUser"})
+    public void removeShareAmountTest(){
+        productDetailsPage.clickCheckoutNowButton();
+
+        CheckoutPage checkoutPage = page(CheckoutPage.class);
+        checkoutPage.fillFormForRegisteredUser(TEST_ADDRESS);
+        int totalPrice = Utils.getIntegerValueOfPrice(checkoutPage.getTotalPrice());
+        int discountTotalPrice = Utils.getIntegerValueOfPrice(checkoutPage.getTotalPrice()) - Integer.parseInt(SHARE_POINTS_TO_REDEEM)/10;
+
+        checkoutPage.redeemSharePoints(SHARE_POINTS_TO_REDEEM);
+        assertThat(checkoutPage.isTotalPrice(Utils.getStringValueOfPrice(discountTotalPrice))).isTrue();
+
+        // It'll remove share points
+        checkoutPage.clickRedeemRemoveButton();
+        assertThat(checkoutPage.isTotalPrice(Utils.getStringValueOfPrice(totalPrice))).isTrue();
+        assertThat(checkoutPage.getAppliedSharePoints()).isEmpty();
     }
 }

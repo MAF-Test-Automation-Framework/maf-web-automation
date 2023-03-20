@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 
 import static com.codeborne.selenide.Selenide.page;
 
-public class CheckoutPage extends AbstractPage {
+public class CheckoutPage extends OrderSummaryPage {
     public final static String BANK_CARD_PAYMENT_METHOD = "CARD PAYMENT";
     public final static String TABBY_PAYMENT_METHOD = "INTEREST FREE INSTALLMENTS";
     private By dropdownOptionsLocator = By.className("ng-option");
@@ -129,5 +129,15 @@ public class CheckoutPage extends AbstractPage {
 
         paymentMethods.fillTabbyUserData(user);
         paymentMethods.fillTabbyBankCardData(bankCard);
+    }
+
+    public void redeemSharePoints(String sharePoints){
+        paymentMethods.checkUseSharePointsCheckbox();
+        paymentMethods.enterSharePoints(sharePoints);
+        paymentMethods.clickRedeemRemoveButton();
+    }
+
+    public void clickRedeemRemoveButton(){
+        paymentMethods.clickRedeemRemoveButton();
     }
 }

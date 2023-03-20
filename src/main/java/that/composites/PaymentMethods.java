@@ -14,6 +14,15 @@ public class PaymentMethods extends AbstractPageComposite {
 
     private By tabbyButtonLocator = shadowCss(".actions", "mafpay-tabby-checkout");
 
+    @FindBy(css = "[for='useSharePoints']")
+    private SelenideElement useSharePointsCheckbox;
+
+    @FindBy(css = "[name='points']")
+    private SelenideElement sharePointsInput;
+
+    @FindBy(className = "shareActions")
+    private SelenideElement redeemRemoveButton;
+
     @FindBy(tagName = "mafpay-checkout")
     private SelenideElement tabbyPaymentSection;
 
@@ -94,5 +103,17 @@ public class PaymentMethods extends AbstractPageComposite {
         tabbyCardExpiryDateInput.sendKeys(bankCard.getExpirationDate());
         tabbyCvvInput.sendKeys(bankCard.getCvv());
         tabbyPayButton.click();
+    }
+
+    public void clickRedeemRemoveButton(){
+        redeemRemoveButton.click();
+    }
+
+    public void checkUseSharePointsCheckbox(){
+        useSharePointsCheckbox.click();
+    }
+
+    public void enterSharePoints(String sharePoints){
+        sharePointsInput.sendKeys(sharePoints);
     }
 }
