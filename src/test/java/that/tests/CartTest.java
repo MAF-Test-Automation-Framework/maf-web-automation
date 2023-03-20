@@ -38,6 +38,7 @@ public class CartTest extends AbstractBaseTest{
     final static String INVALID_PROMO_CODE = "INVALID";
     final static String VALID_PROMO_CODE = "THATAUTO";
     final static String SHARE_POINTS_TO_REDEEM = "20";
+    final static int TABBY_PAYMENT_PRICE_LIMIT = 2000;
 
     @BeforeMethod(onlyForGroups = {"cartTestsForGuest"})
     public void cartSetUpForGuest() {
@@ -292,9 +293,21 @@ public class CartTest extends AbstractBaseTest{
     /**
      * MAF_23: Verify shopping as Registered user with tabby payment method
      */
-    @Test(groups = {"cartTestsForRegisteredUser"})
+    @Test(groups = {"plpTests"})
     public void shopWithTabbyTest() {
-        // Which products can be paid with Tabby? Can only one product be paid with this method?
+        // Tabby payment can be applied only for orders with price less than 2000 AED
+        womenShoesPLPage.login(LOGIN_TEST_USER);
+        CategoryProduct productForTabbyPayment = womenShoesPLPage
+                .getProducts()
+                .stream()
+                .filter(product -> product.getProductPrice() < TABBY_PAYMENT_PRICE_LIMIT)
+                .findFirst()
+                .get();
+        productForTabbyPayment.clickProduct();
+
+        productDetailsPage = page(ProductDetailsPage.class);
+        productDetailsPage.clickAddToCartButton();
+
         productDetailsPage.clickCheckoutNowButton();
 
         CheckoutPage checkoutPage = page(CheckoutPage.class);

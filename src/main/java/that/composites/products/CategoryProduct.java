@@ -4,6 +4,7 @@ import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.By;
 import that.composites.AbstractPageComposite;
 import that.entities.Product;
+import utils.Utils;
 
 public class CategoryProduct extends AbstractPageComposite {
 //    private final static String OUT_OF_STOCK_MARKER = "Sold Out";
@@ -39,5 +40,9 @@ public class CategoryProduct extends AbstractPageComposite {
 
     public int getProductColorsNumber(){
         return root.findAll(colorsLocator).size();
+    }
+
+    public int getProductPrice(){
+        return Utils.getIntegerValueOfPrice(root.find(priceLocator).getText());
     }
 }

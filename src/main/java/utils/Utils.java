@@ -10,7 +10,7 @@ import java.util.Locale;
 
 public class Utils {
     public static Integer getIntegerValueOfPrice(String price) {
-        String priceValue = price.replaceAll("\\D", "");
+        String priceValue = price.replaceAll("[^\\d.]", "");
         return Integer.parseInt(priceValue);
     }
 
