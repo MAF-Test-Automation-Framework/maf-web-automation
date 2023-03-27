@@ -7,7 +7,6 @@ import that.entities.Product;
 import utils.Utils;
 
 public class CategoryProduct extends AbstractPageComposite {
-//    private final static String OUT_OF_STOCK_MARKER = "Sold Out";
     private SelenideElement root;
     private By brandLocator = By.className("item-title");
     private By productNameLocator = By.className("description");
@@ -16,21 +15,20 @@ public class CategoryProduct extends AbstractPageComposite {
     private By wishlistButtonLocator = By.className("heart");
     private By saleTagLocator = By.className("tag-wrapper");
     private By colorsLocator = By.cssSelector(".images-container img");
-//    private By priceInfoLocator = By.className("price-wrap");
 
     public CategoryProduct(SelenideElement root) {
         this.root = root;
     }
 
-    public Product getProductInformation() {
+    public Product getInformation() {
         return new Product(root, brandLocator, productNameLocator, mainImageLinkLocator, priceLocator, saleTagLocator);
     }
 
-    public void clickProduct() {
+    public void goToProductDetailsPage() {
         root.click();
     }
 
-    public void scrollToProduct() {
+    public void scrollTo() {
         root.scrollIntoView(false);
     }
 
@@ -38,11 +36,11 @@ public class CategoryProduct extends AbstractPageComposite {
         root.find(wishlistButtonLocator).hover().click();
     }
 
-    public int getProductColorsNumber(){
+    public int getColorsNumber(){
         return root.findAll(colorsLocator).size();
     }
 
-    public int getProductPrice(){
+    public int getPrice(){
         return Utils.getIntegerValueOfPrice(root.find(priceLocator).getText());
     }
 }

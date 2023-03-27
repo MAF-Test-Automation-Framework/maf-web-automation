@@ -15,7 +15,7 @@ public class AccountPage extends AbstractPage {
     private By viewOrderButtonLocator = By.className("link-view-order");
 
     @FindBy(className = "headline")
-    private ElementsCollection sectionHeaders;
+    private ElementsCollection subsections;
 
     @FindBy(xpath = "//a[contains(@class, 'account-link')]")
     private ElementsCollection sections;
@@ -34,8 +34,8 @@ public class AccountPage extends AbstractPage {
         return getAllItemsText(sections);
     }
 
-    public Boolean isSectionHeadersContains(String... titles) {
-        sectionHeaders.shouldHave(CollectionCondition.texts(titles));
+    public Boolean waitTillSubsectionsContains(String... titles) {
+        subsections.shouldHave(CollectionCondition.containExactTextsCaseSensitive(titles));
         return true;
     }
 

@@ -21,35 +21,34 @@ import static that.test_data.Categories.FilterOptions.*;
 import static that.test_data.Categories.SortOptions.RECOMMENDED;
 import static that.test_data.PageTitlesAndBreadCrumbs.WOMEN_SHOES_BREADCRUMB;
 
-public class ProductPagesTest extends AbstractBaseTest {
+public class ProductPagesTests extends AbstractBaseTest {
     @BeforeMethod(onlyForGroups = {"pdpTests"})
     public void pdpSetUp() {
-        womenShoesPLPage = openBrowserOnPage(WOMEN_SHOES_PL_URL, ProductsListPage.class);
+        womenShoesPLPage = openBrowserOnPage(WOMEN_SHOES_PL_PAGE_URL, ProductsListPage.class);
 
-        CategoryProduct firstProduct = womenShoesPLPage.getProducts().get(0);
-        firstProduct.clickProduct();
+        CategoryProduct product = womenShoesPLPage.getProducts().get(0);
+        product.goToProductDetailsPage();
 
         productDetailsPage = page(ProductDetailsPage.class);
-        productDetailsPage.clickProductDetailsLink();
+        productDetailsPage.goToProductDetails();
     }
 
     /**
      * MAF_02: Click any PLP product and verify correct page and breadcrumb are displayed
      */
     @Test(groups = {"plpTests"})
-    public void pdpPageTest() {
-        // TODO: PDP should pageear for related brand?
-        CategoryProduct firstProduct = womenShoesPLPage.getProducts().get(0);
-        Product expectedProduct = firstProduct.getProductInformation();
+    public void checkPdpPageTest() {
+        CategoryProduct product = womenShoesPLPage.getProducts().get(0);
+        Product expectedProduct = product.getInformation();
         String expectedBreadCrumbEnd = expectedProduct.getProductName();
-        firstProduct.clickProduct();
+        product.goToProductDetailsPage();
 
-        ProductDetailsPage firstProductDetailsPage = page(ProductDetailsPage.class);
-        assertThat(firstProductDetailsPage.doesTitleContain(expectedBreadCrumbEnd))
+        ProductDetailsPage productDetailsPage = page(ProductDetailsPage.class);
+        assertThat(productDetailsPage.waitTillTitleContains(expectedBreadCrumbEnd))
                 .as("Does title contain %s", expectedBreadCrumbEnd)
                 .isTrue();
 
-        String actualBreadCrumb = firstProductDetailsPage.getBreadCrumbText();
+        String actualBreadCrumb = productDetailsPage.getBreadCrumbText();
         assertThat(actualBreadCrumb).contains(WOMEN_SHOES_BREADCRUMB);
         assertThat(actualBreadCrumb).contains(expectedBreadCrumbEnd);
     }
@@ -58,7 +57,7 @@ public class ProductPagesTest extends AbstractBaseTest {
      * MAF_03: Click any PLP product, verify product detail tabs are clickable, product info is visible
      */
     @Test(groups = {"pdpTests"})
-    public void productDetailsSectionTest() {
+    public void checkProductDetailsSectionTest() {
         for (int tabIndex = 0; tabIndex < 3; tabIndex++) {
             productDetailsPage.clickProductDetailsTabByIndex(tabIndex);
             assertThat(productDetailsPage.isPDTabContentVisible(tabIndex))
@@ -71,7 +70,7 @@ public class ProductPagesTest extends AbstractBaseTest {
      * MAF_04: Click any PLP product, verify Product ID code from Product Details
      */
     @Test(groups = {"pdpTests"})
-    public void axSkuIdTest() {
+    public void checkAxSkuIdTest() {
         String currentUrl = getWebDriver().getCurrentUrl();
         String expectedProductId = currentUrl.substring(currentUrl.lastIndexOf("/") + 1);
         assertThat(productDetailsPage.getProductId()).isEqualTo(expectedProductId);
@@ -107,16 +106,16 @@ public class ProductPagesTest extends AbstractBaseTest {
 
         assertThat(allFilteredProducts).hasSize(expectedFilteredProductsCount);
         assertThat(allFilteredProducts)
-                .allSatisfy(product -> assertThat(product.getProductInformation().getBrand()).isEqualTo(JUIN_BRAND.getOption()));
+                .allSatisfy(product -> assertThat(product.getInformation().getBrand()).isEqualTo(JUIN_BRAND.getOption()));
         assertThat(allFilteredProducts)
-                .allSatisfy(product -> assertThat(product.getProductInformation().getSale()).isTrue());
+                .allSatisfy(product -> assertThat(product.getInformation().getSale()).isTrue());
     }
 
     /**
      * MAF_16: Verify Recommended option selected by default
      */
     @Test(groups = {"plpTests"})
-    public void defaultSortingOptionTest() {
+    public void checkDefaultSortingOptionTest() {
         assertThat(womenShoesPLPage.getSelectedOption()).isEqualTo(RECOMMENDED.getOption());
     }
 
@@ -129,14 +128,14 @@ public class ProductPagesTest extends AbstractBaseTest {
         CategoryProduct differentColorsProduct = womenShoesPLPage
                 .getProducts()
                 .stream()
-                .filter(product -> product.getProductColorsNumber()>1)
+                .filter(product -> product.getColorsNumber()>1)
                 .findFirst()
                 .get();
-        differentColorsProduct.clickProduct();
+        differentColorsProduct.goToProductDetailsPage();
         ProductDetailsPage productDetailsPage = page(ProductDetailsPage.class);
-        Product oneColorProduct = productDetailsPage.getProductInformation();
+        Product oneColorProduct = productDetailsPage.getInformation();
         productDetailsPage.selectColor(1);
-        Product anotherColorProduct = productDetailsPage.getProductInformation();
+        Product anotherColorProduct = productDetailsPage.getInformation();
         assertThat(oneColorProduct).usingRecursiveComparison()
                 .ignoringFields("imageLink")
                 .isEqualTo(anotherColorProduct);

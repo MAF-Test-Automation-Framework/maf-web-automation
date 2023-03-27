@@ -1,11 +1,20 @@
 package that.pages.users_pages;
 
+import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.support.FindBy;
+import that.composites.products.CheckoutSummaryProduct;
 import that.pages.AbstractPage;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class OrderSummaryPage extends AbstractPage {
+    @FindBy(className = "checkout-summary-product")
+    private ElementsCollection productsList;
+
     @FindBy(className = "cx-summary-total")
     private SelenideElement totalPrice;
 
@@ -16,12 +25,12 @@ public class OrderSummaryPage extends AbstractPage {
     private SelenideElement promoCodeInput;
 
     @FindBy(css = "main .apply-coupon-button")
-    private SelenideElement applyPromoCodeButton;
+    private SelenideElement applyRemovePromoCodeButton;
 
     @FindBy(css = "main .apply-coupon-error")
     private SelenideElement invalidPromoCodeText;
 
-    public Boolean isTotalPrice(String expectedTotalPrice){
+    public Boolean waitTillTotalPriceIs(String expectedTotalPrice){
         totalPrice.shouldBe(Condition.partialText(expectedTotalPrice));
         return true;
     }
@@ -32,7 +41,11 @@ public class OrderSummaryPage extends AbstractPage {
 
     public void applyPromoCode(String promoCode){
         promoCodeInput.shouldHave(Condition.empty).sendKeys(promoCode);
-        applyPromoCodeButton.click();
+        applyRemovePromoCodeButton.click();
+    }
+
+    public void removePromoCode(){
+        applyRemovePromoCodeButton.click();
     }
 
     public Boolean isInvalidPromoCodeTextVisible(){
@@ -42,5 +55,13 @@ public class OrderSummaryPage extends AbstractPage {
 
     public String getAppliedSharePoints(){
         return appliedSharePoints.getText();
+    }
+
+    public List<CheckoutSummaryProduct> getSummaryProducts() {
+        return productsList
+                .shouldHave(CollectionCondition.sizeGreaterThan(0))
+                .stream()
+                .map(CheckoutSummaryProduct::new)
+                .collect(Collectors.toList());
     }
 }

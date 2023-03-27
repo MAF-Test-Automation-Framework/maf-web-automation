@@ -4,12 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 public class Categories {
-    public enum L1Categories {
-        WOMEN
-    }
+    @AllArgsConstructor
+    @Getter
+    public enum HeaderMenuCategories {
+        WOMEN("WOMEN"),
+        SHOES("SHOES"),
+        SANDALS("Sandals");
 
-    public enum L2Categories {
-        SHOES
+        final String category;
     }
 
     @AllArgsConstructor
@@ -35,12 +37,12 @@ public class Categories {
 
     @AllArgsConstructor
     @Getter
-    public enum AccountPageSection{
+    public enum AccountPageSections {
         YOUR_ACCOUNT("YOUR ACCOUNT"),
-        COMPLETE_YOUR_DETAILS("COMPLETE YOUR DETAILS"),
+        UPCOMING_ORDERS("UPCOMING ORDERS"),
         YOUR_WISHLIST("YOUR WISHLIST"),
         ACCOUNT_SIGN_OUT("ACCOUNT SIGN OUT"),
         ORDERS("ORDERS");
         final String section;
-        }
+    }
 }

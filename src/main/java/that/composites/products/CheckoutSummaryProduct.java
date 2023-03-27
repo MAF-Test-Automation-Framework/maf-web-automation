@@ -16,7 +16,7 @@ public class CheckoutSummaryProduct extends AbstractPageComposite {
         this.root = root;
     }
 
-    public Product getProductInformation() {
+    public Product getInformation() {
         return new Product(root, brandLocator, productNameLocator, imageLinkLocator, priceLocator);
     }
 }

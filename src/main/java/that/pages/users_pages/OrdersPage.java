@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 public class OrdersPage extends AbstractPage {
     private By productNameLocator = By.className("name");
 
-
     @FindBy(xpath = "//*[contains(text(), 'Order #')]/following-sibling::*[1]")
     SelenideElement orderNumber;
 

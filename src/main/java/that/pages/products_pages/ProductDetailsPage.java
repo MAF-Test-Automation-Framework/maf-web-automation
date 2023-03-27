@@ -61,15 +61,15 @@ public class ProductDetailsPage extends AbstractPage {
                 .click();
     }
 
-    public void clickProductDetailsLink() {
+    public void goToProductDetails() {
         productDetailsLink.click();
     }
 
-    public void clickAddToCartButton() {
+    public void addToCart() {
         addToCartButton.click();
     }
 
-    public void clickAddToWishlistButton() {
+    public void addToWishlist() {
         addToWishlistButton.click();
     }
 
@@ -77,7 +77,7 @@ public class ProductDetailsPage extends AbstractPage {
         return !addToCartButton.shouldBe(Condition.disabled).isEnabled();
     }
 
-    public Product getProductInformation() {
+    public Product getInformation() {
         SelenideElement defaultImage = productImages.get(0);
         return new Product(brand, productName, defaultImage, price);
     }

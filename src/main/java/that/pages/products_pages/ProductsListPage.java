@@ -82,7 +82,7 @@ public class ProductsListPage extends AbstractPage {
     public List<Product> convertProductElementsToEntities(List<CategoryProduct> products) {
         return products
                 .stream()
-                .map(CategoryProduct::getProductInformation)
+                .map(CategoryProduct::getInformation)
                 .collect(Collectors.toList());
     }
 }

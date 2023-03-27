@@ -2,6 +2,7 @@ package that.pages.users_pages;
 
 import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.ElementsCollection;
+import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.support.FindBy;
 import that.composites.products.WishlistProduct;
 import that.pages.AbstractPage;
@@ -20,13 +21,16 @@ public class WishlistPage extends AbstractPage {
                 .collect(Collectors.toList());
     }
 
-    public Boolean isWishlistProductsCount(int productCount){
+    public Boolean isProductsCount(int productCount){
         productsList.shouldBe(CollectionCondition.size(productCount));
         return true;
     }
 
-    public void removeAllWishlistProducts(){
-        productsList.forEach(product -> new WishlistProduct(product).removeFromWishlist());
+    public void removeAllProducts(){
+        for (int i = getProducts().size(); i>0; i--){
+            SelenideElement productToDelete = productsList.shouldBe(CollectionCondition.size(i)).get(0);
+            new WishlistProduct(productToDelete).removeFromWishlist();
+        }
         productsList.shouldBe(CollectionCondition.size(0));
     }
 }

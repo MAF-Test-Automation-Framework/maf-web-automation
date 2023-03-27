@@ -19,18 +19,18 @@ public class ShoppingCartProduct extends AbstractPageComposite {
         this.root = root;
     }
 
-    public Product getProductInformation() {
+    public Product getInformation() {
         return new Product(root, brandLocator, productNameLocator, imageLinkLocator, priceLocator);
     }
 
-    public int getProductCount() {
+    public int getCount() {
         Select productQuantitySelect =
                 new Select(root.find(quantitySelectLocator));
         String productCount = productQuantitySelect.getFirstSelectedOption().getText();
         return Integer.parseInt(productCount);
     }
 
-    public void selectMaxAvailableProductCount() {
+    public void selectMaxAvailableCount() {
         Select productQuantitySelect =
                 new Select(root.find(quantitySelectLocator));
         Integer maxProductCount = productQuantitySelect
@@ -42,7 +42,7 @@ public class ShoppingCartProduct extends AbstractPageComposite {
         productQuantitySelect.selectByValue(maxProductCount.toString());
     }
 
-    public void selectProductCount(Integer productCount){
+    public void selectCount(Integer productCount){
         Select productQuantitySelect =
                 new Select(root.find(quantitySelectLocator));
         productQuantitySelect.selectByValue(productCount.toString());

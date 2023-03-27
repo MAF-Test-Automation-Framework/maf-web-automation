@@ -4,9 +4,19 @@ import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
+import org.openqa.selenium.By;
 import org.openqa.selenium.support.FindBy;
+import that.composites.pop_ups.AccountPopUp;
+import that.composites.pop_ups.CartPopUp;
+import that.composites.products.ShoppingCartProduct;
+
+import java.util.List;
+
+import static com.codeborne.selenide.Selenide.page;
 
 public class HeaderMenu extends AbstractPageComposite {
+    AccountPopUp accountPopUp;
+    CartPopUp cartPopUp;
     @FindBy(className = "SiteLinks")
     private SelenideElement saleLine;
 
@@ -34,17 +44,10 @@ public class HeaderMenu extends AbstractPageComposite {
     @FindBy(className = "ThatUserMenuMiniBag")
     private SelenideElement cartButton;
 
-    @FindBy(xpath = "//button[contains(text(), 'Login')]")
-    private SelenideElement accountLoginButton;
-
-    @FindBy(xpath = "//button[contains(text(), 'Logout')]")
-    private SelenideElement logoutButton;
-
-    @FindBy(xpath = "//button[contains(text(), 'register now')]")
-    private SelenideElement registerNowButton;
-
-    @FindBy(className = "user-details")
-    private SelenideElement userDetailsButton;
+    public HeaderMenu() {
+        accountPopUp = page(AccountPopUp.class);
+        cartPopUp = page(CartPopUp.class);
+    }
 
     public Boolean isSaleLineVisible() {
         saleLine.shouldBe(Condition.visible);
@@ -85,12 +88,14 @@ public class HeaderMenu extends AbstractPageComposite {
         getElementByText(l2MenuCategories, categoryName).click();
     }
 
-    public void hoverL2MenuCategory(String categoryName) {
-        getElementByText(l2MenuCategories, categoryName).hover();
+    public SelenideElement hoverL2MenuCategory(String categoryName) {
+        SelenideElement l2CategoryElement = getElementByText(l2MenuCategories, categoryName);
+        l2CategoryElement.hover();
+        return l2CategoryElement;
     }
 
-    public void clickSandalsL3MenuCategory() {
-        sandalsL3MenuCategory.click();
+    public void clickL3MenuCategory(SelenideElement l2CategoryElement, String l3CategoryName) {
+        getElementContainsText(l2CategoryElement.findAll(By.cssSelector("li")), l3CategoryName).click();
     }
 
     public void clickSearchButton() {
@@ -107,26 +112,54 @@ public class HeaderMenu extends AbstractPageComposite {
 
     public void hoverMyAccountButton() {
         areRightHeaderItemsClickable();
-        myAccountButton.hover();
+        myAccountButton.shouldBe(Condition.enabled).hover();
     }
 
-    public void clickUserDetailsButton() {
-        userDetailsButton.click();
+    public void clickLoginButton(){
+        hoverMyAccountButton();
+        accountPopUp.clickLoginButton();
     }
 
-    public String getUserDetailsButtonText() {
-        return userDetailsButton.getText();
+    public void clickUserDetailsButton(){
+        hoverMyAccountButton();
+        accountPopUp.clickUserDetailsButton();
     }
 
-    public void clickLoginButton() {
-        accountLoginButton.shouldBe(Condition.enabled).click();
+    public void clickLogoutButton(){
+        hoverMyAccountButton();
+        accountPopUp.clickLogoutButton();
     }
 
-    public void clickLogoutButton() {
-        logoutButton.click();
+    public void clickRegisterButton(){
+        hoverMyAccountButton();
+        accountPopUp.clickRegisterButton();
     }
 
-    public void clickRegisterButton() {
-        registerNowButton.click();
+    public String getUserDetailsButtonText(){
+        hoverMyAccountButton();
+        return accountPopUp.getUserDetailsButtonText();
+    }
+
+    public void clickGoToBagButton(){
+        hoverCartButton();
+        cartPopUp.clickGoToBagButton();
+    }
+
+    public void clickCheckoutNowButton(){
+        hoverCartButton();
+        cartPopUp.clickCheckoutNowButton();
+    }
+
+    public void checkoutAsLoggedInUser(){
+        clickCheckoutNowButton();
+        cartPopUp.clickCheckoutLoginButton();
+    }
+
+    public List<ShoppingCartProduct> getCartProducts() {
+        return cartPopUp.getProducts();
+    }
+
+    public void checkoutAsGuest(String guestEmail){
+        cartPopUp.checkoutAsGuest(guestEmail);
     }
 }

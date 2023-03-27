@@ -19,16 +19,16 @@ public class WishlistProduct extends AbstractPageComposite {
         this.root = root;
     }
 
-    public Product getProductInformation() {
+    public Product getInformation() {
         return new Product(root, brandLocator, productNameLocator, imageLinkLocator, priceLocator);
     }
 
-    public Boolean removeFromWishlistBtnIsDisplayed(){
+    public Boolean isRemoveFromWishlistBtnDisplayed(){
         root.find(removeFromWishlistBtnLocator).hover().shouldBe(Condition.visible);
         return true;
     }
 
-    public void clickMoveToBagButton() {
+    public void moveToBag() {
         root.hover().find(moveToBagButtonLocator).click();
     }
 

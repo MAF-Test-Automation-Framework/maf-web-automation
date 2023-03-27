@@ -4,7 +4,6 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import that.composites.products.CategoryProduct;
 import that.pages.HomePage;
-import that.pages.users_pages.AccountPage;
 import that.pages.products_pages.ProductsListPage;
 
 import java.util.List;
@@ -13,12 +12,10 @@ import static com.codeborne.selenide.Selenide.page;
 import static org.assertj.core.api.Assertions.assertThat;
 import static that.entities.User.LOGIN_TEST_USER;
 import static that.entities.User.SIGN_UP_TEST_USER;
-import static that.test_data.Categories.AccountPageSection.*;
-import static that.test_data.Categories.L1Categories.WOMEN;
-import static that.test_data.Categories.L2Categories.SHOES;
+import static that.test_data.Categories.HeaderMenuCategories.*;
 import static that.test_data.PageTitlesAndBreadCrumbs.*;
 
-public class HomePageTest extends AbstractBaseTest {
+public class HomePageTests extends AbstractBaseTest {
     @BeforeMethod
     public void homePageSetUp() {
         homePage = openBrowserOnPage("/", HomePage.class);
@@ -28,14 +25,14 @@ public class HomePageTest extends AbstractBaseTest {
      * MAF_01: Go to Home page, verify header items are clickable, banners are visible, loaded page is correct
      */
     @Test
-    public void homePageTest() {
+    public void checkHomePageTest() {
         assertThat(homePage.areAllHeaderMenuItemsClickableOrVisible())
                 .as("Header menu items should be clickable")
                 .isTrue();
         assertThat(homePage.areBannerButtonsVisible())
                 .as("Banners should be visible")
                 .isTrue();
-        assertThat(homePage.doesTitleContain(HOME_PAGE_TITLE))
+        assertThat(homePage.waitTillTitleContains(HOME_PAGE_TITLE))
                 .as("Title should be %s", HOME_PAGE_TITLE)
                 .isTrue();
     }
@@ -44,10 +41,10 @@ public class HomePageTest extends AbstractBaseTest {
      * MAF_06: Click any l1 category and verify correct page are displayed
      */
     @Test
-    public void l1CategoryTest() {
-        homePage.clickHeaderL1Category(String.valueOf(WOMEN));
+    public void checkL1CategoryTest() {
+        homePage.clickHeaderL1Category(WOMEN.getCategory());
 
-        assertThat(homePage.doesTitleContain(WOMEN_PLP_TITLE))
+        assertThat(homePage.waitTillTitleContains(WOMEN_PLP_TITLE))
                 .as("Title should be %s", WOMEN_PLP_TITLE)
                 .isTrue();
     }
@@ -56,11 +53,11 @@ public class HomePageTest extends AbstractBaseTest {
      * MAF_07: Click any l2 category and verify correct page and breadcrumb are displayed
      */
     @Test
-    public void l2CategoryTest() {
-        homePage.clickHeaderL2Category(String.valueOf(WOMEN), String.valueOf(SHOES));
+    public void checkL2CategoryTest() {
+        homePage.clickHeaderL2Category(WOMEN.getCategory(), SHOES.getCategory());
         String actualWomenShoesPageBreadCrumb = homePage.getBreadCrumbText();
 
-        assertThat(homePage.doesTitleContain(WOMEN_SHOES_PLP_TITLE))
+        assertThat(homePage.waitTillTitleContains(WOMEN_SHOES_PLP_TITLE))
                 .as("Title should be %s", WOMEN_SHOES_PLP_TITLE)
                 .isTrue();
         assertThat(actualWomenShoesPageBreadCrumb).isEqualTo(WOMEN_SHOES_BREADCRUMB);
@@ -70,11 +67,11 @@ public class HomePageTest extends AbstractBaseTest {
      * MAF_08: Click l3 Sandals category and verify correct page and breadcrumb are displayed
      */
     @Test
-    public void l3CategoryTest() {
-        homePage.clickHeaderSandalsL3Category();
+    public void checkL3CategoryTest() {
+        homePage.clickHeaderL3Category(WOMEN.getCategory(), SHOES.getCategory(), SANDALS.getCategory());
         String actualWomenSandalsPageBreadCrumb = homePage.getBreadCrumbText();
 
-        assertThat(homePage.doesTitleContain(WOMEN_SHOES_SANDALS_PLP_TITLE))
+        assertThat(homePage.waitTillTitleContains(WOMEN_SHOES_SANDALS_PLP_TITLE))
                 .as("Title should be %s", WOMEN_SHOES_SANDALS_PLP_TITLE)
                 .isTrue();
         assertThat(actualWomenSandalsPageBreadCrumb).isEqualTo(WOMEN_SHOES_SANDALS_BREADCRUMB);
@@ -87,46 +84,16 @@ public class HomePageTest extends AbstractBaseTest {
     public void searchProductsTest() {
         String searchedKey = "Dress";
 
-        homePage.searchProductFromHeader(searchedKey);
+        homePage.searchProduct(searchedKey);
 
         ProductsListPage productListPage = page(ProductsListPage.class);
-        assertThat(productListPage.doesTitleContain(SEARCH_PAGE_TITLE_PART))
+        assertThat(productListPage.waitTillTitleContains(SEARCH_PAGE_TITLE_PART))
                 .as("Does title contain %s", SEARCH_PAGE_TITLE_PART)
                 .isTrue();
-        List<CategoryProduct> foundProducts = productListPage.getProducts().subList(0, 4);
-        foundProducts.get(0).scrollToProduct();
+        List<CategoryProduct> foundProducts = productListPage.getProducts().subList(0, 10);
+        foundProducts.get(0).scrollTo();
         assertThat(foundProducts)
-                .allSatisfy(product -> assertThat(product.getProductInformation().getProductName()).contains(searchedKey));
-    }
-
-    /**
-     * MAF_14: Login, go to Account page, verify main Account page elements are displayed
-     */
-    @Test
-    public void accountPageDetailsTest() {
-        String[] yourAccountSubsections = new String[]{
-                COMPLETE_YOUR_DETAILS.getSection(),
-                YOUR_WISHLIST.getSection(),
-                ACCOUNT_SIGN_OUT.getSection()};
-
-        homePage.login(LOGIN_TEST_USER);
-        homePage.clickUserDetailsHeaderAccountPopUpBtn();
-        AccountPage accountPage = page(AccountPage.class);
-
-        for (String section : accountPage.getSectionNames()) {
-            accountPage.clickSection(section);
-
-            if (section.equals(YOUR_ACCOUNT.getSection())) {
-                accountPage.clickSection(YOUR_ACCOUNT.getSection());
-                assertThat(accountPage.isSectionHeadersContains(yourAccountSubsections))
-                        .as("Section headers should contain")
-                        .isTrue();
-            } else {
-                assertThat(accountPage.isSectionHeadersContains(section))
-                        .as("Section headers should contain %s", section)
-                        .isTrue();
-            }
-        }
+                .allSatisfy(product -> assertThat(product.getInformation().getProductName()).contains(searchedKey));
     }
 
     /**
@@ -135,14 +102,14 @@ public class HomePageTest extends AbstractBaseTest {
     @Test
     public void signInSignUpTest() {
         homePage.signUp(SIGN_UP_TEST_USER);
-        assertThat(homePage.getHeaderAccountPopUpUserDetailsText())
+        assertThat(homePage.getUserWelcomeText())
                 .contains(SIGN_UP_TEST_USER.getFirstName())
                 .contains(SIGN_UP_TEST_USER.getLastName());
 
         homePage.logout();
 
-        homePage.login(SIGN_UP_TEST_USER);
-        assertThat(homePage.getHeaderAccountPopUpUserDetailsText())
+        homePage.login(LOGIN_TEST_USER);
+        assertThat(homePage.getUserWelcomeText())
                 .contains(SIGN_UP_TEST_USER.getFirstName())
                 .contains(SIGN_UP_TEST_USER.getLastName());
     }

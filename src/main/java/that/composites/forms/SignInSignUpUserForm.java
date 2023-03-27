@@ -1,8 +1,9 @@
-package that.composites;
+package that.composites.forms;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.support.FindBy;
+import that.composites.AbstractPageComposite;
 
 public class SignInSignUpUserForm extends AbstractPageComposite {
     @FindBy(id = "email")

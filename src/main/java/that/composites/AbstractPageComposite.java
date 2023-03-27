@@ -21,7 +21,7 @@ public class AbstractPageComposite {
     }
 
     protected SelenideElement getElementContainsText(ElementsCollection listOfItems, String itemName) {
-        return waitTillAllElementsAreVisible(listOfItems)
+        return listOfItems
                 .stream()
                 .filter(item -> item.getText().contains(itemName))
                 .findFirst()

@@ -9,6 +9,6 @@ public class PageTitlesAndBreadCrumbs {
     public final static String WISHLIST_PAGE_TITLE = "Wish List";
     public final static String SEARCH_PAGE_TITLE_PART = "results for";
     public final static String WOMEN_SHOES_BREADCRUMB = "Home\nWomen\nShoes";
-    public final static String WOMEN_SHOES_SANDALS_BREADCRUMB = "Home\nWomen\nWomen Shoes\nSandals";
+    public final static String WOMEN_SHOES_SANDALS_BREADCRUMB = "Home\nWomen\nShoes\nSandals";
 
 }

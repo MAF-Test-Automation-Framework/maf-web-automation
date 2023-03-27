@@ -1,12 +1,10 @@
 package that.pages.users_pages;
 
 import com.codeborne.selenide.CollectionCondition;
-import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.support.FindBy;
 import that.composites.products.ShoppingCartProduct;
-import that.pages.AbstractPage;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,12 +24,21 @@ public class CartPage extends OrderSummaryPage {
                 .collect(Collectors.toList());
     }
 
-    public Boolean isCartEmpty() {
+    public Boolean waitTillCartIsEmpty() {
         productsList.shouldHave(CollectionCondition.size(0));
         return true;
     }
 
-    public void clickCheckoutButton(){
+    public void checkout(){
         checkoutButton.click();
+    }
+
+    public void removeAllProducts(){
+        for (int i = getProducts().size(); i>0; i--){
+            SelenideElement productToDelete = productsList.shouldBe(CollectionCondition.size(i)).get(0);
+            productToDelete.scrollIntoView(false);
+            new ShoppingCartProduct(productToDelete).removeFromCart();
+        }
+        waitTillCartIsEmpty();
     }
 }

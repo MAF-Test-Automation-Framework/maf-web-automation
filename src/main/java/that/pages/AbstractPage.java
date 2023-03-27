@@ -1,7 +1,5 @@
 package that.pages;
 
-import com.codeborne.selenide.CollectionCondition;
-import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.support.FindBy;
@@ -9,13 +7,12 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import that.composites.AbstractPageComposite;
 import that.composites.HeaderMenu;
-import that.composites.SignInSignUpUserForm;
+import that.composites.forms.SignInSignUpUserForm;
 import that.composites.products.ShoppingCartProduct;
 import that.entities.User;
 
 import java.time.Duration;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.codeborne.selenide.Selenide.page;
 import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
@@ -33,34 +30,16 @@ public class AbstractPage extends AbstractPageComposite {
     @FindBy(css = ".search-box-wrapper input")
     private SelenideElement productSearchInput;
 
-    @FindBy(xpath = "//*[contains(text(), 'Go to bag')]")
-    private SelenideElement goToBagCartPopUpButton;
-
-    @FindBy(xpath = "//*[contains(text(), 'Checkout Now')]")
-    private SelenideElement checkoutNowPopUpButton;
-
-    @FindBy(xpath = "//cx-cart-modal-login//button[contains(text(), 'Login')]")
-    private SelenideElement checkoutLoginButton;
-
-    @FindBy(className = "btn-guest-email")
-    private SelenideElement guestCheckoutButton;
-
-    @FindBy(id = "cartEmail")
-    private SelenideElement guestEmailInput;
-
-    @FindBy(css = "header cx-cart-item")
-    private ElementsCollection cartProductsList;
-
     public AbstractPage() {
         headerMenu = page(HeaderMenu.class);
         userDataForm = page(SignInSignUpUserForm.class);
     }
 
-    public void clickCookieNotificationCloseButton() {
+    public void closeCookieNotification() {
         cookieNotificationButton.click();
     }
 
-    public Boolean doesTitleContain(String titlePart) {
+    public Boolean waitTillTitleContains(String titlePart) {
         new WebDriverWait(getWebDriver(), Duration.ofSeconds(10)).until(ExpectedConditions.titleContains(titlePart));
         return true;
     }
@@ -81,47 +60,40 @@ public class AbstractPage extends AbstractPageComposite {
         headerMenu.clickL2MenuCategory(l2CategoryName);
     }
 
-    // TODO: ???
-    public void clickHeaderSandalsL3Category() {
-        headerMenu.hoverL1MenuCategory("WOMEN");
-        headerMenu.hoverL2MenuCategory("SHOES");
-        headerMenu.clickSandalsL3MenuCategory();
+    public void clickHeaderL3Category(String l1CategoryName, String l2CategoryName, String l3CategoryName) {
+        headerMenu.hoverL1MenuCategory(l1CategoryName);
+        SelenideElement l2CategoryElement = headerMenu.hoverL2MenuCategory(l2CategoryName);
+        headerMenu.clickL3MenuCategory(l2CategoryElement, l3CategoryName);
     }
 
     public String getBreadCrumbText() {
         return breadCrumb.getText();
     }
 
-    public void searchProductFromHeader(String searchedProductName) {
+    public void searchProduct(String searchedProductName) {
         headerMenu.clickSearchButton();
         productSearchInput.sendKeys(searchedProductName, Keys.ENTER);
     }
 
-    public List<ShoppingCartProduct> getCartPopUpProductsFromHeader() {
-        return cartProductsList
-                .shouldHave(CollectionCondition.sizeGreaterThan(0))
-                .stream()
-                .map(ShoppingCartProduct::new)
-                .collect(Collectors.toList());
+    public List<ShoppingCartProduct> getCartProductsFromHeader() {
+        return headerMenu.getCartProducts();
     }
 
-    public void clickGoToBagHeaderCartPopUpButton() {
-        headerMenu.hoverCartButton();
-        goToBagCartPopUpButton.click();
+    public void goToCartPage() {
+        headerMenu.clickGoToBagButton();
     }
 
-    public void clickHeaderWishlistButton() {
+    public void goToWishlistPage() {
         headerMenu.clickWishlistButton();
     }
 
     public void login(User user) {
-        headerMenu.hoverMyAccountButton();
         headerMenu.clickLoginButton();
         fillLoginForm(user);
     }
 
-    public void checkoutAndLogin(User user){
-        checkoutLoginButton.click();
+    public void checkoutAsLoggedInUser(User user){
+        headerMenu.checkoutAsLoggedInUser();
         fillLoginForm(user);
     }
 
@@ -131,23 +103,19 @@ public class AbstractPage extends AbstractPageComposite {
         userDataForm.clickSignInButton();
     }
 
-    public void clickUserDetailsHeaderAccountPopUpBtn() {
-        headerMenu.hoverMyAccountButton();
+    public void goToAccountPage() {
         headerMenu.clickUserDetailsButton();
     }
 
-    public void clickCheckoutNowButton() {
-        headerMenu.hoverCartButton();
-        checkoutNowPopUpButton.click();
+    public void checkoutNow() {
+        headerMenu.clickCheckoutNowButton();
     }
 
     public void logout() {
-        headerMenu.hoverMyAccountButton();
         headerMenu.clickLogoutButton();
     }
 
     public void signUp(User user) {
-        headerMenu.hoverMyAccountButton();
         headerMenu.clickRegisterButton();
 
         userDataForm.selectTitle(user.getTitle());
@@ -165,12 +133,10 @@ public class AbstractPage extends AbstractPageComposite {
     }
 
     public void checkoutAsGuest(String guestEmail) {
-        guestEmailInput.sendKeys(guestEmail);
-        guestCheckoutButton.click();
+        headerMenu.checkoutAsGuest(guestEmail);
     }
 
-    public String getHeaderAccountPopUpUserDetailsText(){
-        headerMenu.hoverMyAccountButton();
+    public String getUserWelcomeText(){
         return headerMenu.getUserDetailsButtonText();
     }
 }
